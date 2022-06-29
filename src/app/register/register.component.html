@@ -1,0 +1,208 @@
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><strong>Olá Cliente</strong>, informe seus dados para criar sua conta de acesso.
+                </h5>
+                <p class="card-subtitle">Preencha os campos abaixo:</p>
+                <hr />
+ 
+                <div *ngIf="mensagem_sucesso" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Sucesso!</strong> {{mensagem_sucesso}}
+                    <button (click)="mensagem_sucesso = ''" type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+ 
+                <div *ngIf="mensagem_erro" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Erro!</strong> {{mensagem_erro}}
+                    <button (click)="mensagem_erro = ''" type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+ 
+                <form [formGroup]="formCadastro" (ngSubmit)="onSubmit()">
+ 
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Informe seu Nome:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui" formControlName="nome" />
+                            <div class="text-danger" *ngIf="form.nome.touched && form.nome.invalid">
+                                <span *ngIf="form.nome.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Informe seu Email:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui" formControlName="email" />
+                            <div class="text-danger" *ngIf="form.email.touched && form.email.invalid">
+                                <span *ngIf="form.email.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Informe seu CPF:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui" formControlName="cpf"
+                                mask="000.000.000-00" />
+                            <div class="text-danger" *ngIf="form.cpf.touched && form.cpf.invalid">
+                                <span *ngIf="form.cpf.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label>Informe seu Telefone:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui" formControlName="telefone"
+                                mask="(00) 00000-0000" />
+                            <div class="text-danger" *ngIf="form.telefone.touched && form.telefone.invalid">
+                                <span *ngIf="form.telefone.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Informe sua Senha:</label>
+                            <input type="password" class="form-control" placeholder="Digite aqui"
+                                formControlName="senha" />
+                            <div class="text-danger" *ngIf="form.senha.touched && form.senha.invalid">
+                                <span *ngIf="form.senha.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Confirme sua Senha:</label>
+                            <input type="password" class="form-control" placeholder="Digite aqui"
+                                formControlName="senhaConfirmacao" />
+                            <div class="text-danger"
+                                *ngIf="form.senhaConfirmacao.touched && form.senhaConfirmacao.invalid">
+                                <span *ngIf="form.senhaConfirmacao.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Informe seu Cep:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui" formControlName="cep"
+                                mask="00000-000" (keyup)="onKeyUp($event)" />
+                            <div class="text-danger" *ngIf="form.cep.touched && form.cep.invalid">
+                                <span *ngIf="form.cep.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Logradouro:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui"
+                                formControlName="logradouro" />
+                            <div class="text-danger" *ngIf="form.logradouro.touched && form.logradouro.invalid">
+                                <span *ngIf="form.logradouro.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Número:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui"
+                                formControlName="numero" />
+                            <div class="text-danger" *ngIf="form.numero.touched && form.numero.invalid">
+                                <span *ngIf="form.numero.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Complemento:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui"
+                                formControlName="complemento" />
+                            <div class="text-danger" *ngIf="form.complemento.touched && form.complemento.invalid">
+                                <span *ngIf="form.complemento.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="row mb-3">
+                        <div class="col-md-5">
+                            <label>Bairro:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui"
+                                formControlName="bairro" />
+                            <div class="text-danger" *ngIf="form.bairro.touched && form.bairro.invalid">
+                                <span *ngIf="form.bairro.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label>Cidade:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui"
+                                formControlName="cidade" />
+                            <div class="text-danger" *ngIf="form.cidade.touched && form.cidade.invalid">
+                                <span *ngIf="form.cidade.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>UF:</label>
+                            <select class="form-select" formControlName="uf">
+                                <option value="">Selecione</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espirito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
+                            <div class="text-danger" *ngIf="form.uf.touched && form.uf.invalid">
+                                <span *ngIf="form.uf.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+ 
+                            <input type="submit" value="Realizar Cadastro" class="btn btn-primary"
+                                [disabled]="!formCadastro.valid" />
+ 
+                            <a [routerLink]="['/acessar-conta']" class="btn btn-light">
+                                Já possui conta? Acesse aqui!
+                            </a>
+                        </div>
+                    </div>
+ 
+                </form>
+ 
+            </div>
+        </div>
+    </div>
+</div>

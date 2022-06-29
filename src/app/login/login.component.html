@@ -1,0 +1,50 @@
+<div class="row mt-5">
+    <div class="col-md-4 offset-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center">
+                    <h5 class="card-title"><strong>Olá Cliente</strong>, informe seus dados para acessar sua conta</h5>
+                    <p class="card-subtitle">Preencha os campos abaixo:</p>
+                </div>
+                <hr/>
+ 
+                <form>
+ 
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label>Informe seu CPF:</label>
+                            <input type="text" class="form-control" placeholder="Digite aqui"/>
+                        </div>
+                    </div>
+ 
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label>Informe sua Senha:</label>
+                            <input type="password" class="form-control" placeholder="Digite aqui"/>
+                        </div>
+                    </div>
+ 
+                    <div class="row mb-2">
+                        <div class="col-md-12 d-grid">
+                            <input type="submit" value="Acessar Conta" class="btn btn-primary"/>
+                        </div>
+                    </div>
+ 
+                    <div class="row mb-2">
+                        <div class="col-md-12 d-grid">
+                            <a [routerLink]="['/criar-conta']" class="btn btn-light">
+                                Não possui conta? Cadastre-se aqui!
+                            </a>
+                        </div>
+                    </div>
+ 
+                </form>
+ 
+            </div>
+        </div>
+    </div>
+</div>
+ 
+
+
+
