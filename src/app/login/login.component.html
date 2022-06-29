@@ -6,27 +6,44 @@
                     <h5 class="card-title"><strong>Olá Cliente</strong>, informe seus dados para acessar sua conta</h5>
                     <p class="card-subtitle">Preencha os campos abaixo:</p>
                 </div>
-                <hr/>
+                <hr />
  
-                <form>
+                <div *ngIf="mensagem_erro" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Erro!</strong> {{mensagem_erro}}
+                    <button (click)="mensagem_erro = ''" type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+ 
+                <form [formGroup]="formLogin" (ngSubmit)="onSubmit()">
  
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <label>Informe seu CPF:</label>
-                            <input type="text" class="form-control" placeholder="Digite aqui"/>
+                            <input type="text" class="form-control" placeholder="Digite aqui" formControlName="cpf" mask="000.000.000-00" />
+                            <div class="text-danger" *ngIf="form.cpf.touched && form.cpf.invalid">
+                                <span *ngIf="form.cpf.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
                         </div>
                     </div>
  
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <label>Informe sua Senha:</label>
-                            <input type="password" class="form-control" placeholder="Digite aqui"/>
+                            <input type="password" class="form-control" placeholder="Digite aqui"
+                                formControlName="senha" />
+                            <div class="text-danger" *ngIf="form.senha.touched && form.senha.invalid">
+                                <span *ngIf="form.senha.errors.required">
+                                    Campo obrigatório.
+                                </span>
+                            </div>
                         </div>
                     </div>
  
                     <div class="row mb-2">
                         <div class="col-md-12 d-grid">
-                            <input type="submit" value="Acessar Conta" class="btn btn-primary"/>
+                            <input type="submit" value="Acessar Conta" class="btn btn-primary"
+                                [disabled]="!formLogin.valid" />
                         </div>
                     </div>
  
@@ -44,7 +61,5 @@
         </div>
     </div>
 </div>
- 
-
 
 
