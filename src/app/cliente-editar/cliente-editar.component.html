@@ -1,0 +1,72 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><strong>Editar Dados do Cliente</strong></h5>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label>Nome:</label>
+                <input type="text" class="form-control" formControlName="nome" required />
+              </div>
+              <div class="col-md-6">
+                <label>CPF:</label>
+                <input type="text" class="form-control" formControlName="cpf" required />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label>Email:</label>
+                <input type="email" class="form-control" formControlName="email" required />
+              </div>
+              <div class="col-md-6">
+                <label>Telefone:</label>
+                <input type="text" class="form-control" formControlName="telefone" required />
+              </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+              <div class="col-md-3 order-1">
+                <label>CEP:</label>
+                <input type="text" class="form-control" formControlName="cep" required (keyup)="buscarEnderecoPorCep($event)" maxlength="9" mask="00000-000" />
+              </div>
+              <div class="col-md-5 order-2">
+                <label>Logradouro:</label>
+                <input type="text" class="form-control" formControlName="logradouro" required />
+              </div>
+              <div class="col-md-2 order-3">
+                <label>Número:</label>
+                <input type="text" class="form-control" formControlName="numero" required />
+              </div>
+              <div class="col-md-2 order-4">
+                <label>Complemento:</label>
+                <input type="text" class="form-control" formControlName="complemento" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label>Bairro:</label>
+                <input type="text" class="form-control" formControlName="bairro" required />
+              </div>
+              <div class="col-md-4">
+                <label>Cidade:</label>
+                <input type="text" class="form-control" formControlName="cidade" required />
+              </div>
+              <div class="col-md-4">
+                <label>UF:</label>
+                <input type="text" class="form-control" formControlName="uf" required />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Salvar Alterações</button>
+              </div>
+            </div>
+            <div *ngIf="mensagem" class="alert alert-info mt-3">{{ mensagem }}</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

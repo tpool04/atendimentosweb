@@ -1,1 +1,49 @@
-<p>atendimento-consulta works!</p>
+<div class="container mt-4">
+	<h4>Consultar Atendimentos</h4>
+	<div *ngIf="mensagem" class="alert alert-danger">{{ mensagem }}</div>
+	<div *ngIf="atendimentos.length > 0; else semAtendimentos">
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped table-hover">
+				<thead class="table-dark">
+					<tr>
+						<th>Data/Hora</th>
+						<th>Serviço</th>
+						<th>Preço</th>
+						<th>Profissional</th>
+						<th>Telefone Profissional</th>
+						<th>Cliente</th>
+						<th>CPF Cliente</th>
+						<th>Observações</th>
+						<th>Ações</th>
+					  </tr>
+				</thead>
+				<tbody>
+								<tr *ngFor="let a of atendimentos">
+									<td>{{ a.dataHora }}</td>
+									<td>{{ a.nomeServico }}</td>
+									<td>{{ a.precoServico | currency:'BRL' }}</td>
+									<td>{{ a.nomeProfissional }}</td>
+									<td>{{ a.telefoneProfissional }}</td>
+									<td>{{ a.nomeCliente }}</td>
+									<td>{{ a.cpfCliente }}</td>
+									<td>{{ a.observacoes }}</td>
+									<td>
+														<div class="d-flex gap-2">
+															<ng-container *ngIf="isFuturaOuHoje(a.dataHora); else soExcluir">
+																<button class="btn btn-sm btn-warning" (click)="alterarAtendimento(a)">Alterar</button>
+																<button class="btn btn-sm btn-danger" (click)="excluirAtendimento(a)">Excluir</button>
+															</ng-container>
+															<ng-template #soExcluir>
+																<button class="btn btn-sm btn-danger" (click)="excluirAtendimento(a)">Excluir</button>
+															</ng-template>
+														</div>
+									</td>
+								</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<ng-template #semAtendimentos>
+		<div class="alert alert-info">Nenhum atendimento encontrado.</div>
+	</ng-template>
+</div>

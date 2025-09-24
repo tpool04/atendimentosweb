@@ -42,8 +42,10 @@
  
                     <div class="row mb-2">
                         <div class="col-md-12 d-grid">
-                            <input type="submit" value="Acessar Conta" class="btn btn-primary"
-                                [disabled]="!formLogin.valid" />
+                                                        <button type="submit" class="btn btn-primary" [disabled]="!formLogin.valid || isLoading">
+                                                            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                            {{ isLoading ? 'Acessando...' : 'Acessar Conta' }}
+                                                        </button>
                         </div>
                     </div>
  
@@ -59,7 +61,19 @@
  
             </div>
         </div>
+        <!-- Modal de 2FA -->
+        <app-login-2fa
+            [show]="show2FAModal"
+            (confirmado)="on2FAConfirmado($event)"
+            (fechado)="on2FAFechado()">
+        </app-login-2fa>
     </div>
 </div>
+
+<app-login-2fa
+    [show]="show2FAModal"
+    (confirmado)="on2FAConfirmado($event)"
+    (fechado)="on2FAFechado()">
+</app-login-2fa>
 
 

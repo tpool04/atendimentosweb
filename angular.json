@@ -102,5 +102,8 @@
       }
     }
   },
-  "defaultProject": "atendimentosweb"
+  "defaultProject": "atendimentosweb",
+  "cli": {
+    "analytics": "30f0d1c7-3c40-463a-a680-6182afa977b2"
+  }
 }

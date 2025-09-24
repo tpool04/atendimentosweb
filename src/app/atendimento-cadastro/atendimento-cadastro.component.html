@@ -1,1 +1,50 @@
-<p>atendimento-cadastro works!</p>
+<div class="row mt-5">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title"><strong>Cadastro de Atendimento</strong></h5>
+				<p class="card-subtitle">Preencha os campos abaixo:</p>
+				<hr />
+
+				<form #atendimentoForm="ngForm" (ngSubmit)="cadastrarAtendimento(atendimentoForm)">
+					<div class="row mb-3">
+						<div class="col-md-2">
+							<label for="data">Data:</label>
+							<input type="date" class="form-control" id="data" name="data" [(ngModel)]="atendimento.data" required>
+						</div>
+						<div class="col-md-2">
+							<label for="hora">Hora:</label>
+							<input type="time" class="form-control" id="hora" name="hora" [(ngModel)]="atendimento.hora" required>
+						</div>
+						<div class="col-md-3">
+							<label for="idServico">Tipo de Serviço:</label>
+									<select class="form-select" id="idServico" name="idServico" [(ngModel)]="atendimento.idServico" (change)="onTipoServicoChange()" required>
+								<option value="">Selecione</option>
+								<option *ngFor="let tipo of tiposAtendimento" [value]="tipo.idServico">{{ tipo.nome }}</option>
+							</select>
+						</div>
+						<div class="col-md-3">
+							<label for="idProfissional">Profissional:</label>
+							<select class="form-select" id="idProfissional" name="idProfissional" [(ngModel)]="atendimento.idProfissional" required>
+								<option value="">Selecione</option>
+								<option *ngFor="let prof of profissionais" [value]="prof.idProfissional">{{ prof.nome }}</option>
+							</select>
+						</div>
+						<div class="col-md-2">
+							<label for="observacoes">Observação:</label>
+							<textarea class="form-control" id="observacoes" name="observacoes" [(ngModel)]="atendimento.observacoes"></textarea>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary" [disabled]="!atendimentoForm.valid || isLoading">
+								<span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+								{{ isLoading ? 'Cadastrando...' : 'Cadastrar Atendimento' }}
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,29 @@
+<div class="container mt-4">
+  <h4>Reagendar Atendimento</h4>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label>Novo Serviço:</label>
+      <select class="form-control" formControlName="idServico" required>
+  <option value="" disabled>Selecione o serviço</option>
+  <option *ngFor="let s of servicos" [value]="s.idServico.toString()">{{ s.nome }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label>Novo Profissional:</label>
+  <select class="form-control" formControlName="idProfissional" required [disabled]="!form.get('idServico')?.value">
+  <option value="" disabled>Selecione o profissional</option>
+  <option *ngFor="let p of profissionais" [value]="p.idProfissional">{{ p.nome }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label>Nova Data e Hora:</label>
+      <input type="datetime-local" class="form-control" formControlName="dataHora" required />
+    </div>
+    <div class="mb-3">
+      <label>Observações:</label>
+      <textarea class="form-control" formControlName="observacoes"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Salvar</button>
+    <div *ngIf="mensagem" class="alert alert-info mt-3">{{ mensagem }}</div>
+  </form>
+</div>
