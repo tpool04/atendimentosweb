@@ -31,7 +31,21 @@ export class CadastroConsultaComponent implements OnInit {
   }
 
   on2FAAtivado() {
-    // Exemplo: mostrar mensagem ou atualizar status do cliente
+    // Log para debug do status do 2FA
+    setTimeout(() => {
+      console.log('[2FA] Status twoFactorAtivo após reload:', this.cliente?.twoFactorAtivo);
+    }, 500);
     alert('Autenticação de dois fatores ativada com sucesso!');
+    // Recarregar dados do cliente para atualizar o status do 2FA
+    const token = localStorage.getItem('ACCESS_TOKEN');
+    const headers = { Authorization: `Bearer ${token}` };
+    this.http.get<any>('http://localhost:8080/api/clientes/me', { headers }).subscribe({
+      next: (res) => {
+        this.cliente = res.cliente;
+      },
+      error: () => {
+        // Se falhar, mantém o alerta
+      }
+    });
   }
 }
