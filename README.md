@@ -1,27 +1,45 @@
-# Atendimentosweb
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.6.
+# Atendimentos Web
 
-## Development server
+Este projeto é um sistema web para cadastro, consulta e gerenciamento de atendimentos, com autenticação de dois fatores (2FA) opcional para maior segurança.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Funcionalidades
+- Cadastro e edição de clientes
+- Login com ou sem autenticação de dois fatores (2FA)
+- Ativação e confirmação de 2FA via Google Authenticator
+- Cadastro e consulta de atendimentos
+- Exibição do perfil do usuário na barra superior
 
-## Code scaffolding
+## Tecnologias Utilizadas
+- Angular
+- Bootstrap
+- TypeScript
+- API RESTful (backend externo)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Como rodar o projeto
+1. Instale as dependências:
+	```
+	npm install
+	```
+2. Inicie o servidor de desenvolvimento:
+	```
+	npm start
+	```
+3. Acesse o sistema em [http://localhost:4200](http://localhost:4200)
 
-## Build
+## Observações
+- O backend deve estar rodando e acessível nas URLs configuradas nos arquivos de ambiente.
+- O 2FA é opcional: usuários podem acessar o sistema sem ativar o 2FA, mas podem ativar a qualquer momento para maior segurança.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Estrutura Principal
+- `src/app/login/` — Tela de login e fluxo de 2FA
+- `src/app/consulta-cadastro/` — Consulta e edição de dados do cliente
+- `src/app/ativar-2fa/` — Componente de ativação do 2FA
+- `src/app/app.component.*` — Barra de navegação e roteamento principal
 
-## Running unit tests
+## Contribuição
+Pull requests são bem-vindos! Para sugestões, abra uma issue.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+---
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+© 2025 Atendimentos Web
