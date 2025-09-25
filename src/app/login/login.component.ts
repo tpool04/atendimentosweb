@@ -53,21 +53,26 @@ export class LoginComponent implements OnInit {
           if (result.nome && result.nome.startsWith('2FA necessário. Use o ID:')) {
             // 2FA está ativado para esse usuário, abrir modal
             this.tempLoginResult = result;
+            console.log('[LOGIN] Perfil recebido (2FA necessário):', result.perfil);
+            if (result.perfil) {
+              localStorage.setItem("PERFIL", result.perfil);
+            }
             this.show2FAModal = true;
-          } else if (result.autenticado === true && result.token) {
-            // 2FA não está ativado, pode logar normalmente
+          } else if (result.token) {
+            // Login permitido para qualquer usuário com token válido
             localStorage.setItem("ACCESS_TOKEN", result.token);
             localStorage.setItem("NOME_CLIENTE", result.nome);
             if (result.idCliente) {
               localStorage.setItem("ID_CLIENTE", String(result.idCliente));
             }
+            console.log('[LOGIN] Perfil recebido (login direto):', result.perfil);
             if (result.perfil) {
               localStorage.setItem("PERFIL", result.perfil);
             }
             this.authService.setLogado(true);
             this.router.navigate(["/consultar-atendimentos"]);
           } else {
-            this.mensagem_erro = 'Ative o 2FA antes de acessar sua conta.';
+            this.mensagem_erro = 'Usuário ou senha inválidos.';
           }
         },
         error: (e) => {

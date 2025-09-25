@@ -7,6 +7,7 @@ import { Ativar2FAComponent } from '../ativar-2fa/ativar-2fa.component';
   templateUrl: './cadastro-consulta.component.html'
 })
 export class CadastroConsultaComponent implements OnInit {
+  perfil: string | null = null;
   cliente: any;
   endereco: any;
   @ViewChild('ativar2FAComponent') ativar2FAComponent!: Ativar2FAComponent;
@@ -14,6 +15,8 @@ export class CadastroConsultaComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    this.perfil = localStorage.getItem('PERFIL');
+    console.log('[DEBUG] Valor de perfil no localStorage:', this.perfil);
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`

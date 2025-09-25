@@ -1,3 +1,4 @@
+import { Input } from '@angular/core';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -7,6 +8,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ['./ativar-2fa.component.css']
 })
 export class Ativar2FAComponent {
+  @Input() is2FAEnabled: boolean = false;
   get qrCodeImgUrl(): string {
     if (!this.qrCodeUrl) return '';
     // Se vier uma URL de imagem, extrai o parâmetro 'data' dela

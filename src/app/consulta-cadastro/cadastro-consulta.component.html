@@ -5,10 +5,10 @@
 				<div class="card-body">
 					<div class="d-flex justify-content-end mb-3">
 						<a routerLink="/editar-cliente" class="btn btn-primary">Editar Dados</a>
-						<button class="btn btn-warning ms-2" *ngIf="cliente && !cliente.twoFactorAtivo" (click)="ativar2FAComponent.abrirModal(cliente.id)">Ativar 2FA</button>
-						<span *ngIf="cliente && cliente.twoFactorAtivo" class="badge bg-success ms-2">2FA já ativado</span>
+						<button class="btn btn-warning ms-2" style="font-weight: bold; font-size: 1rem; text-transform: none;" *ngIf="cliente && !cliente.is2FAEnabled" (click)="ativar2FAComponent.abrirModal(cliente.id)">2FA Ativado</button>
+						<button *ngIf="cliente && cliente.is2FAEnabled" class="btn btn-success ms-2" style="font-weight: 400; font-size: 1rem; text-transform: none; cursor: default;" disabled>2FA Ativado</button>
 					</div>
-					<app-ativar-2fa #ativar2FAComponent (ativado)="on2FAAtivado()"></app-ativar-2fa>
+					<app-ativar-2fa #ativar2FAComponent [is2FAEnabled]="cliente?.is2FAEnabled" (ativado)="on2FAAtivado()"></app-ativar-2fa>
 					<h5 class="card-title"><strong>Dados do Cliente</strong></h5>
 								<div *ngIf="cliente">
 									<p><strong>Nome:</strong> {{ cliente.nome }}</p>

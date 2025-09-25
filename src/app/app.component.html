@@ -21,7 +21,7 @@
         </li>
       </ul>
       <div class="d-flex align-items-center ms-auto">
-        <span *ngIf="nomeCliente" class="text-white me-3">Olá, {{ nomeCliente }}
+        <span *ngIf="nomeCliente" class="text-white me-3">Olá, {{ nomeCliente }}<span *ngIf="perfil" class="badge bg-secondary ms-2">{{ perfil }}</span>
           <button (click)="logoff()" class="btn btn-link btn-sm text-white ms-2 p-0" title="Sair" style="vertical-align: middle;">
             <i class="bi bi-box-arrow-right" style="font-size: 1.2rem;"></i>
           </button>

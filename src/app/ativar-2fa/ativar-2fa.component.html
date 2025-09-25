@@ -1,18 +1,20 @@
-<div *ngIf="isLoading" class="text-center my-3">
-  <span>Carregando...</span>
-</div>
-<div *ngIf="!isLoading">
-  <h5>Ativar autenticação de dois fatores</h5>
-  <div *ngIf="qrCodeUrl">
-  <p>Escaneie o QR Code abaixo com o aplicativo Google Authenticator:</p>
-  <img *ngIf="qrCodeImgUrl" [src]="qrCodeImgUrl" alt="QR Code 2FA" style="max-width:200px;">
-    <p>
-      <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Baixar Google Authenticator (Android)</a><br>
-      <a href="https://apps.apple.com/br/app/google-authenticator/id388497605" target="_blank">Baixar Google Authenticator (iOS)</a>
-    </p>
-    <label for="codigo">Digite o código gerado pelo app:</label>
-    <input id="codigo" type="text" [(ngModel)]="codigo" maxlength="6" class="form-control mb-2" autocomplete="one-time-code">
-    <button class="btn btn-success" (click)="confirmarCodigo()">Confirmar</button>
+<div *ngIf="!is2FAEnabled">
+  <div *ngIf="isLoading" class="text-center my-3">
+    <span>Carregando...</span>
   </div>
-  <div *ngIf="mensagem" class="alert alert-info mt-2">{{ mensagem }}</div>
+  <div *ngIf="!isLoading">
+    <h5>Ativar autenticação de dois fatores</h5>
+    <div *ngIf="qrCodeUrl">
+      <p>Escaneie o QR Code abaixo com o aplicativo Google Authenticator:</p>
+      <img *ngIf="qrCodeImgUrl" [src]="qrCodeImgUrl" alt="QR Code 2FA" style="max-width:200px;">
+      <p>
+        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Baixar Google Authenticator (Android)</a><br>
+        <a href="https://apps.apple.com/br/app/google-authenticator/id388497605" target="_blank">Baixar Google Authenticator (iOS)</a>
+      </p>
+      <label for="codigo">Digite o código gerado pelo app:</label>
+      <input id="codigo" type="text" [(ngModel)]="codigo" maxlength="6" class="form-control mb-2" autocomplete="one-time-code">
+      <button class="btn btn-success" (click)="confirmarCodigo()">Confirmar</button>
+    </div>
+    <div *ngIf="mensagem" class="alert alert-info mt-2">{{ mensagem }}</div>
+  </div>
 </div>
