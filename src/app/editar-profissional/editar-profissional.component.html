@@ -1,0 +1,49 @@
+<div class="modal show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+  <h5 class="modal-title">{{ cadastro ? 'Cadastrar Profissional' : 'Editar Profissional' }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cancelado.emit()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="salvar()">
+          <div class="mb-3">
+            <label for="nome" class="form-label">Nome</label>
+            <input id="nome" class="form-control" formControlName="nome">
+          </div>
+          <div class="mb-3">
+            <label for="telefone" class="form-label">Telefone</label>
+            <input id="telefone" class="form-control" formControlName="telefone">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Serviços</label>
+            <div *ngFor="let servico of servicosDisponiveis">
+              <div class="form-check d-flex align-items-center mb-1">
+                <input class="form-check-input me-2" type="checkbox"
+                  [value]="servico.idServico"
+                  [checked]="form.value.servicos.includes(servico.idServico)"
+                  (change)="onServicoChange($event, servico.idServico)">
+                <label class="form-check-label me-2">{{ servico.nome }}</label>
+                <input *ngIf="form.value.servicos.includes(servico.idServico)"
+                  #valorInput
+                  type="number" min="0" step="0.01" class="form-control form-control-sm ms-2" style="width: 100px;"
+                  [value]="getServicoValor(servico.idServico)"
+                  (input)="onServicoValorChange(servico.idServico, valorInput.value)">
+                <span *ngIf="form.value.servicos.includes(servico.idServico)" class="ms-1">R$</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="mensagemErro" class="alert alert-danger">
+            <strong>Erro:</strong> {{ mensagemErro | json }}
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancelado.emit()">Cancelar</button>
+        <button type="button" class="btn btn-primary" [disabled]="form.invalid || isLoading" (click)="salvar()">
+          {{ cadastro ? 'Cadastrar' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

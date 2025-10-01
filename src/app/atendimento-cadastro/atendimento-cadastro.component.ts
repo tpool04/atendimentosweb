@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AtendimentoService } from './atendimento.service';
 import { TipoAtendimentoService, TipoAtendimento } from './tipo-atendimento.service';
 import { ProfissionalService, Profissional } from './profissional.service';
@@ -27,7 +28,8 @@ export class AtendimentoCadastroComponent implements OnInit {
   constructor(
     private atendimentoService: AtendimentoService,
     private tipoAtendimentoService: TipoAtendimentoService,
-    private profissionalService: ProfissionalService
+    private profissionalService: ProfissionalService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -72,12 +74,14 @@ export class AtendimentoCadastroComponent implements OnInit {
             this.isLoading = false;
             alert('Atendimento cadastrado com sucesso!');
             form.reset();
+            this.router.navigate(['/consultar-atendimentos']);
           },
           error: (err) => {
             this.isLoading = false;
             if (err.status === 201) {
               alert('Atendimento cadastrado com sucesso!');
               form.reset();
+              this.router.navigate(['/consultar-atendimentos']);
             } else {
               console.error('Erro ao cadastrar atendimento:', err);
               alert('Erro ao cadastrar atendimento.');

@@ -1,0 +1,4 @@
+/* Estilos para a tabela de profissionais */
+.table th, .table td {
+  vertical-align: middle;
+}

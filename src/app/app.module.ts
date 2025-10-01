@@ -1,3 +1,5 @@
+import { EditarProfissionalComponent } from './editar-profissional/editar-profissional.component';
+import { ListarProfissionaisComponent } from './listar-profissionais/listar-profissionais.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
@@ -24,6 +26,7 @@ import { ClienteEditarComponent } from './cliente-editar/cliente-editar.componen
 import { Ativar2FAComponent } from './ativar-2fa/ativar-2fa.component';
 
 const routes: Routes = [
+  { path: 'profissionais', component: ListarProfissionaisComponent },
   { path: '', pathMatch: 'full', redirectTo: 'acessar-conta' },
   { path: 'acessar-conta', component: LoginComponent },
   { path: 'criar-conta', component: RegisterComponent },
@@ -45,7 +48,9 @@ const routes: Routes = [
     ClienteEditarComponent,
     AtendimentoReagendarComponent,
     Ativar2FAComponent,
-    Login2FAComponent
+    Login2FAComponent,
+  ListarProfissionaisComponent,
+  EditarProfissionalComponent
   ],
   imports: [
     BrowserModule,
