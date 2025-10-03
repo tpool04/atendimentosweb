@@ -1,7 +1,7 @@
-
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-atendimento-consulta',
@@ -28,7 +28,7 @@ export class AtendimentoConsultaComponent implements OnInit {
   ngOnInit(): void {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http.get<any[]>('http://localhost:8080/api/atendimentos', { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentosApi}api/atendimentos`, { headers }).subscribe({
       next: (res) => {
         // Ordenar por data do serviço (assumindo campo dataHora ou similar)
         function parseDataHora(str: string): Date {
@@ -61,7 +61,7 @@ export class AtendimentoConsultaComponent implements OnInit {
     if (!confirm('Tem certeza que deseja excluir este atendimento?')) return;
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.delete(`http://localhost:8080/api/atendimentos/${a.idAtendimento}`, { headers, responseType: 'text' }).subscribe({
+  this.http.delete(`${environment.atendimentosApi}api/atendimentos/${a.idAtendimento}`, { headers, responseType: 'text' }).subscribe({
       next: () => {
         this.atendimentos = this.atendimentos.filter(at => at.idAtendimento !== a.idAtendimento);
       },

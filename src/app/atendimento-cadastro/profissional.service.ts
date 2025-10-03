@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Profissional {
   idProfissional: number;
@@ -12,7 +13,7 @@ export interface Profissional {
   providedIn: 'root'
 })
 export class ProfissionalService {
-  private apiUrl = 'http://localhost:8080/api/profissionais';
+  private apiUrl = environment.atendimentosApi + 'api/profissionais';
 
   constructor(private http: HttpClient) { }
 

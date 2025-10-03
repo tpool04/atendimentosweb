@@ -3,6 +3,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-editar-profissional',
@@ -26,10 +27,10 @@ export class EditarProfissionalComponent implements OnInit {
       if (!servicos.includes(idServico)) {
         this.form.patchValue({ servicos: [...servicos, idServico] });
       }
-      // Sempre inicializa valor ao marcar (se não existir)
+      // Inicializa valor ao marcar (se não existir)
       if (this.servicosValores[idServico] === undefined) {
         const servicoObj = this.servicosDisponiveis.find(s => s.idServico === idServico);
-        this.servicosValores[idServico] = servicoObj?.preco ?? 0;
+        this.servicosValores[idServico] = servicoObj?.valor ?? servicoObj?.preco ?? 0;
       }
     } else {
       this.form.patchValue({ servicos: servicos.filter(id => id !== idServico) });
@@ -41,6 +42,7 @@ export class EditarProfissionalComponent implements OnInit {
   form: FormGroup;
   mensagemErro = '';
   isLoading = false;
+  servicosValores: { [idServico: number]: number } = {};
 
   constructor(private http: HttpClient, private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -50,18 +52,12 @@ export class EditarProfissionalComponent implements OnInit {
     });
   }
 
-  // Mapeia idServico -> valor
-  servicosValores: { [id: number]: number } = {};
-
-  getServicoValor(idServico: number): number {
-    return this.servicosValores[idServico] ?? 0;
-  }
-
-  onServicoValorChange(idServico: number, valor: string) {
-    this.servicosValores[idServico] = parseFloat(valor) || 0;
-  }
-
   ngOnInit(): void {
+    console.log('[DEBUG] EditarProfissionalComponent ngOnInit chamado', {
+      profissional: this.profissional,
+      cadastro: this.cadastro,
+      servicosDisponiveis: this.servicosDisponiveis
+    });
     if (this.profissional) {
       this.form.patchValue({
         nome: this.profissional.nome,
@@ -74,8 +70,11 @@ export class EditarProfissionalComponent implements OnInit {
           this.servicosValores[s.idServico] = s.valor ?? s.preco ?? 0;
         }
       } else if (this.cadastro) {
-        // Cadastro: limpa valores
+        // Cadastro: inicializa valores dos serviços disponíveis
         this.servicosValores = {};
+        for (const servico of this.servicosDisponiveis) {
+          this.servicosValores[servico.idServico] = servico.valor ?? servico.preco ?? 0;
+        }
       }
     }
     // Para cadastro: inicializa valores dos serviços marcados
@@ -87,6 +86,14 @@ export class EditarProfissionalComponent implements OnInit {
         }
       }
     }
+  }
+
+  getServicoValor(idServico: number): number {
+    return this.servicosValores[idServico] ?? 0;
+  }
+
+  onServicoValorChange(idServico: number, valor: string) {
+    this.servicosValores[idServico] = parseFloat(valor) || 0;
   }
 
   salvar() {
@@ -104,14 +111,17 @@ export class EditarProfissionalComponent implements OnInit {
       }
       return { idServico: id, valor };
     });
+    // Remove formatação do telefone para o backend
+    const telefoneSemFormatacao = (this.form.value.telefone || '').replace(/\D/g, '');
     const payload = {
       ...this.form.value,
+      telefone: telefoneSemFormatacao,
       servicos
     };
     console.log('Payload enviado ao backend:', payload);
     if (this.cadastro) {
       // Cadastro: POST
-      this.http.post('http://localhost:8080/api/profissionais', payload, { headers }).subscribe({
+  this.http.post(`${environment.atendimentosApi}api/profissionais`, payload, { headers }).subscribe({
         next: (res) => {
           this.isLoading = false;
           const msg = (res as any)?.message;
@@ -124,8 +134,17 @@ export class EditarProfissionalComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao cadastrar profissional:', err);
+          // Tratamento específico para telefone duplicado
           if (err.error && typeof err.error === 'object') {
-            this.mensagemErro = err.error.message || JSON.stringify(err.error);
+            if (JSON.stringify(err.error).includes('duplicate key value') && JSON.stringify(err.error).includes('telefone')) {
+              this.mensagemErro = 'Já existe um profissional cadastrado com este telefone.';
+              alert(this.mensagemErro);
+            } else {
+              this.mensagemErro = err.error.message || JSON.stringify(err.error);
+            }
+          } else if (err.error && typeof err.error === 'string' && err.error.includes('duplicate key value') && err.error.includes('telefone')) {
+            this.mensagemErro = 'Já existe um profissional cadastrado com este telefone.';
+            alert(this.mensagemErro);
           } else {
             this.mensagemErro = err.error || err.statusText || 'Erro ao cadastrar profissional.';
           }
@@ -134,7 +153,7 @@ export class EditarProfissionalComponent implements OnInit {
       });
     } else {
       // Edição: PUT
-      this.http.put(`http://localhost:8080/api/profissionais/${this.profissional.idProfissional}`, payload, { headers }).subscribe({
+  this.http.put(`${environment.atendimentosApi}api/profissionais/${this.profissional.idProfissional}`, payload, { headers }).subscribe({
         next: (res) => {
           this.isLoading = false;
           const msg = (res as any)?.message;

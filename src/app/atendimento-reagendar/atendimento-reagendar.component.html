@@ -23,7 +23,8 @@
       <label>Observações:</label>
       <textarea class="form-control" formControlName="observacoes"></textarea>
     </div>
-    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Salvar</button>
+  <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Salvar</button>
+  <button type="button" class="btn btn-secondary ms-2" (click)="voltarParaConsulta()">Cancelar</button>
     <div *ngIf="mensagem" class="alert alert-info mt-3">{{ mensagem }}</div>
   </form>
 </div>

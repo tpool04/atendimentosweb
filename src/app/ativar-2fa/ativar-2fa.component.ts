@@ -1,6 +1,7 @@
 import { Input } from '@angular/core';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-ativar-2fa',
@@ -45,12 +46,12 @@ export class Ativar2FAComponent {
     this.isLoading = true;
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http.post<any>(`http://localhost:8080/api/2fa/ativar/${userId}`, {}, { headers }).subscribe({
+  this.http.post<any>(`${environment.atendimentosApi}api/2fa/ativar/${userId}`, {}, { headers }).subscribe({
       next: (res) => {
         console.log('[2FA] Resposta do backend:', res);
-  // res.otpAuthUrl já é o link do QR Code pronto
-  console.log('[2FA] Valor de otpAuthUrl recebido:', res.otpAuthUrl);
-  this.qrCodeUrl = res.otpAuthUrl;
+        // res.qrCodeUrl já é o link do QR Code pronto
+        console.log('[2FA] Valor de qrCodeUrl recebido:', res.qrCodeUrl);
+        this.qrCodeUrl = res.qrCodeUrl;
         this.secret = res.secret;
         this.isLoading = false;
       },
@@ -79,7 +80,7 @@ export class Ativar2FAComponent {
     console.log('[2FA] idCliente enviado:', idCliente);
     console.log('[2FA] Payload enviado:', payload);
     console.log('[2FA] Header Authorization:', headers.get('Authorization'));
-    this.http.post<any>('http://localhost:8080/api/confirmar-2fa', payload, { headers }).subscribe({
+  this.http.post<any>(`${environment.atendimentosApi}api/confirmar-2fa`, payload, { headers }).subscribe({
       next: (res) => {
         if (res.verified) {
           this.mensagem = 'Autenticação em dois fatores ativada com sucesso! Você está mais protegido.';

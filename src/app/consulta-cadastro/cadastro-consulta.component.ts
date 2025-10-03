@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Ativar2FAComponent } from '../ativar-2fa/ativar-2fa.component';
 
 @Component({
@@ -21,7 +22,7 @@ export class CadastroConsultaComponent implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
-    this.http.get<any>('http://localhost:8080/api/clientes/me', { headers }).subscribe({
+  this.http.get<any>(`${environment.atendimentosApi}api/clientes/me`, { headers }).subscribe({
       next: (res) => {
         this.cliente = res.cliente;
         this.endereco = res.endereco;
@@ -42,7 +43,7 @@ export class CadastroConsultaComponent implements OnInit {
     // Recarregar dados do cliente para atualizar o status do 2FA
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = { Authorization: `Bearer ${token}` };
-    this.http.get<any>('http://localhost:8080/api/clientes/me', { headers }).subscribe({
+  this.http.get<any>(`${environment.atendimentosApi}api/clientes/me`, { headers }).subscribe({
       next: (res) => {
         this.cliente = res.cliente;
       },

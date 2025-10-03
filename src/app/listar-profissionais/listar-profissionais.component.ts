@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-listar-profissionais',
@@ -16,7 +17,7 @@ export class ListarProfissionaisComponent implements OnInit {
   modoCadastro = false;
   servicosDisponiveis: any[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.perfil = localStorage.getItem('PERFIL');
@@ -27,7 +28,7 @@ export class ListarProfissionaisComponent implements OnInit {
   carregarServicos() {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http.get<any[]>('http://localhost:8080/api/servicos', { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentosApi}api/servicos`, { headers }).subscribe({
       next: (res) => {
         this.servicosDisponiveis = res;
       },
@@ -43,22 +44,30 @@ export class ListarProfissionaisComponent implements OnInit {
   }
 
   abrirCadastro() {
-    this.profissionalEditando = { nome: '', telefone: '', servicos: [] };
+    console.log('abrirCadastro chamado');
+    this.profissionalEditando = {
+      idProfissional: null,
+      nome: '',
+      telefone: '',
+      servicos: [],
+      valor: null,
+      preco: null
+    };
     this.modoCadastro = true;
+    this.cdr.detectChanges();
   }
 
   aoAtualizar() {
-    this.profissionalEditando = null;
-    this.carregarProfissionais();
+  this.profissionalEditando = null;
+  this.modoCadastro = false;
+  this.carregarProfissionais();
   }
-
-
 
   carregarProfissionais() {
     this.isLoading = true;
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http.get<any[]>('http://localhost:8080/api/profissionais/detalhados', { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentosApi}api/profissionais/detalhados`, { headers }).subscribe({
       next: (res) => {
         this.profissionais = res;
         this.isLoading = false;
@@ -69,4 +78,18 @@ export class ListarProfissionaisComponent implements OnInit {
       }
     });
   }
+
+  excluirProfissional(id: number) {
+  if (!confirm('Tem certeza que deseja excluir este profissional?')) return;
+  const token = localStorage.getItem('ACCESS_TOKEN');
+  const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+  this.http.delete(`${environment.atendimentosApi}api/profissionais/${id}`, { headers }).subscribe({
+    next: () => {
+      this.carregarProfissionais();
+    },
+    error: (err) => {
+      this.mensagemErro = 'Erro ao excluir profissional.';
+    }
+  });
+}
 }

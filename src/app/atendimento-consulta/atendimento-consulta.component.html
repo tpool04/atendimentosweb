@@ -15,30 +15,39 @@
 						<th>CPF Cliente</th>
 						<th>Observações</th>
 						<th>Ações</th>
-					  </tr>
+					</tr>
 				</thead>
 				<tbody>
-								<tr *ngFor="let a of atendimentos">
-									<td>{{ a.dataHora }}</td>
-									<td>{{ a.nomeServico }}</td>
-									<td>{{ a.precoServico | currency:'BRL' }}</td>
-									<td>{{ a.nomeProfissional }}</td>
-									<td>{{ a.telefoneProfissional }}</td>
-									<td>{{ a.nomeCliente }}</td>
-									<td>{{ a.cpfCliente }}</td>
-									<td>{{ a.observacoes }}</td>
-									<td>
-														<div class="d-flex gap-2">
-															<ng-container *ngIf="isFuturaOuHoje(a.dataHora); else soExcluir">
-																<button class="btn btn-sm btn-warning" (click)="alterarAtendimento(a)">Alterar</button>
-																<button class="btn btn-sm btn-danger" (click)="excluirAtendimento(a)">Excluir</button>
-															</ng-container>
-															<ng-template #soExcluir>
-																<button class="btn btn-sm btn-danger" (click)="excluirAtendimento(a)">Excluir</button>
-															</ng-template>
-														</div>
-									</td>
-								</tr>
+					<tr *ngFor="let a of atendimentos">
+						<td>{{ a.dataHora }}</td>
+						<td>{{ a.nomeServico }}</td>
+						<td>{{ a.valorServico | currency:'BRL' }}</td>
+						<td>{{ a.nomeProfissional }}</td>
+						<td>{{ a.telefoneProfissional }}</td>
+						<td>{{ a.nomeCliente }}</td>
+						<td>{{ a.cpfCliente }}</td>
+						<td>{{ a.observacoes }}</td>
+						<td>
+							<div class="d-flex gap-2">
+								<ng-container *ngIf="isFuturaOuHoje(a.dataHora); else soExcluir">
+									<button class="btn btn-sm btn-warning d-flex align-items-center"
+										(click)="alterarAtendimento(a)">
+										<span>Alterar</span>
+										<i class="bi bi-pencil ms-1"></i>
+									</button>
+									<button class="btn btn-danger btn-sm ms-2 d-flex align-items-center"
+										(click)="excluirAtendimento(a)">
+										<span>Excluir</span>
+										<i class="bi bi-trash ms-1"></i>
+									</button>
+								</ng-container>
+								<ng-template #soExcluir>
+									<button class="btn btn-sm btn-danger" (click)="excluirAtendimento(a)">Excluir <i
+											class="bi bi-trash"></i></button>
+								</ng-template>
+							</div>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>

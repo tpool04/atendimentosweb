@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-cliente-editar',
@@ -72,7 +73,7 @@ export class ClienteEditarComponent implements OnInit {
   ngOnInit(): void {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http.get<any>('http://localhost:8080/api/clientes/me', { headers }).subscribe({
+  this.http.get<any>(`${environment.atendimentosApi}api/clientes/me`, { headers }).subscribe({
       next: (res) => {
         let cep = res.endereco.cep || '';
         // Formatar para 12345-678 se vier como 12345678
@@ -118,7 +119,7 @@ export class ClienteEditarComponent implements OnInit {
       cep: this.form.value.cep
     };
   console.log('Body enviado na atualização:', body);
-    this.http.put('http://localhost:8080/api/clientes/me', body, { headers, responseType: 'text' }).subscribe({
+  this.http.put(`${environment.atendimentosApi}api/clientes/me`, body, { headers, responseType: 'text' }).subscribe({
       next: () => {
         this.mensagem = 'Dados atualizados com sucesso!';
         setTimeout(() => {

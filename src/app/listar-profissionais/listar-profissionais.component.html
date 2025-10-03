@@ -1,57 +1,71 @@
+        <app-editar-profissional *ngIf="modoCadastro || profissionalEditando"
+          [profissional]="profissionalEditando"
+          [servicosDisponiveis]="servicosDisponiveis"
+          [cadastro]="modoCadastro"
+          (atualizado)="aoAtualizar()"
+          (cancelado)="profissionalEditando = null; modoCadastro = false">
+        </app-editar-profissional>
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Profissionais</h3>
-    <button *ngIf="perfil === 'ADMIN'" class="btn btn-success" (click)="abrirCadastro()">Novo Profissional</button>
+    <button *ngIf="perfil === 'ADMIN'" class="btn btn-success d-flex align-items-center" (click)="abrirCadastro()">
+      <span>Cadastrar Profissional</span>
+  <i class="bi bi-person-plus ms-1"></i>
+    </button>
   </div>
   <div *ngIf="isLoading" class="alert alert-info">Carregando profissionais...</div>
   <div *ngIf="mensagemErro" class="alert alert-danger">{{ mensagemErro }}</div>
-  <table *ngIf="!isLoading && profissionais.length" class="table table-bordered table-striped mt-3">
-    <thead>
-      <tr>
-  <th>Nome</th>
-  <th>Serviços</th>
-  <th>Valor</th>
-  <th>Telefone</th>
-        <th *ngIf="perfil === 'ADMIN'">Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-  <tr *ngFor="let profissional of profissionais">
-        <td>{{ profissional.nome }}</td>
-        <td>
-          <ul *ngIf="profissional.servicos && profissional.servicos.length; else nenhumServico">
-            <li *ngFor="let servico of profissional.servicos">
-              <strong>{{ servico.nome }}</strong>
-              <span *ngIf="servico.descricao"> - {{ servico.descricao }}</span>
-            </li>
-          </ul>
-          <ng-template #nenhumServico>-</ng-template>
-        </td>
-        <td>
-          <ul *ngIf="profissional.servicos && profissional.servicos.length; else nenhumValor">
-            <li *ngFor="let servico of profissional.servicos">
-              <span *ngIf="servico.valor != null; else precoSpan">R$ {{ servico.valor | number:'1.2-2' }}</span>
-              <ng-template #precoSpan>
-                <span *ngIf="servico.preco != null">R$ {{ servico.preco | number:'1.2-2' }}</span>
-              </ng-template>
-            </li>
-          </ul>
-          <ng-template #nenhumValor>-</ng-template>
-        </td>
-        <td>{{ profissional.telefone }}</td>
-        <td *ngIf="perfil === 'ADMIN'">
-          <button class="btn btn-sm btn-primary" (click)="abrirEdicao(profissional)">Editar</button>
-        </td>
-      </tr>
-<app-editar-profissional
-  *ngIf="profissionalEditando"
-  [profissional]="profissionalEditando"
-  [servicosDisponiveis]="servicosDisponiveis"
-  [cadastro]="modoCadastro"
-  (atualizado)="aoAtualizar()"
-  (cancelado)="profissionalEditando = null; modoCadastro = false">
-</app-editar-profissional>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table *ngIf="!isLoading && profissionais.length" class="table table-bordered table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Nome</th>
+          <th>Serviços</th>
+          <th>Valor</th>
+          <th>Telefone</th>
+          <th *ngIf="perfil === 'ADMIN'">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let profissional of profissionais">
+          <td>{{ profissional.nome }}</td>
+          <td>
+            <ul *ngIf="profissional.servicos && profissional.servicos.length; else nenhumServico">
+              <li *ngFor="let servico of profissional.servicos">
+                <strong>{{ servico.nome }}</strong>
+                <span *ngIf="servico.descricao"> - {{ servico.descricao }}</span>
+              </li>
+            </ul>
+            <ng-template #nenhumServico>-</ng-template>
+          </td>
+          <td>
+            <ul *ngIf="profissional.servicos && profissional.servicos.length; else nenhumValor">
+              <li *ngFor="let servico of profissional.servicos">
+                <span *ngIf="servico.valor != null; else precoSpan">R$ {{ servico.valor | number:'1.2-2' }}</span>
+                <ng-template #precoSpan>
+                  <span *ngIf="servico.preco != null">R$ {{ servico.preco | number:'1.2-2' }}</span>
+                </ng-template>
+              </li>
+            </ul>
+            <ng-template #nenhumValor>-</ng-template>
+          </td>
+          <td>{{ profissional.telefone }}</td>
+          <td *ngIf="perfil === 'ADMIN'">
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-warning d-flex align-items-center" (click)="abrirEdicao(profissional)">
+                <span>Editar</span>
+                <i class="bi bi-pencil ms-1"></i>
+              </button>
+              <button class="btn btn-danger btn-sm d-flex align-items-center"
+                (click)="excluirProfissional(profissional.idProfissional)">
+                <span>Excluir</span>
+                <i class="bi bi-trash ms-1"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div *ngIf="!isLoading && !profissionais.length" class="alert alert-warning">Nenhum profissional cadastrado.</div>
 </div>

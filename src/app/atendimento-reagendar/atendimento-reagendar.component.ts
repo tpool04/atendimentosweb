@@ -1,8 +1,8 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-atendimento-reagendar',
@@ -10,6 +10,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ['./atendimento-reagendar.component.css']
 })
 export class AtendimentoReagendarComponent implements OnInit {
+  voltarParaConsulta() {
+    this.router.navigate(['/consultar-atendimentos']);
+  }
   servicos: any[] = [];
   profissionais: any[] = [];
   todosProfissionais: any[] = [];
@@ -45,14 +48,14 @@ export class AtendimentoReagendarComponent implements OnInit {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     // Buscar serviços e todos profissionais juntos
-    this.http.get<any[]>('http://localhost:8080/api/servicos', { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentosApi}api/servicos`, { headers }).subscribe({
       next: (servicos) => {
         console.log('Serviços carregados (antes do filtro):', servicos);
         const servicosValidos = servicos.filter(s => s && s.idServico);
         console.log('Serviços válidos (após filtro):', servicosValidos);
         this.servicos = servicosValidos;
         // Buscar dados do atendimento só depois dos serviços carregados
-        this.http.get<any>(`http://localhost:8080/api/atendimentos/${this.idAtendimento}`, { headers }).subscribe({
+  this.http.get<any>(`${environment.atendimentosApi}api/atendimentos/${this.idAtendimento}`, { headers }).subscribe({
           next: (atendimento) => {
             // Converter dataHora para formato datetime-local
             let dataHoraInput = '';
@@ -72,7 +75,7 @@ export class AtendimentoReagendarComponent implements OnInit {
             });
             // Só buscar profissionais e setar profissional depois
             if (idServico) {
-              this.http.get<any[]>(`http://localhost:8080/api/profissionais?servico=${idServico}`, { headers }).subscribe({
+              this.http.get<any[]>(`${environment.atendimentosApi}api/profissionais?servico=${idServico}`, { headers }).subscribe({
                 next: (res) => {
                   this.profissionais = res;
                   console.log('[DEBUG] Nome profissional do atendimento:', atendimento.nomeProfissional);
@@ -113,7 +116,7 @@ export class AtendimentoReagendarComponent implements OnInit {
       this.profissionais = [];
       this.form.get('idProfissional')?.setValue('');
       if (!idServico) return;
-      this.http.get<any[]>(`http://localhost:8080/api/profissionais?servico=${idServico}`, { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentosApi}api/profissionais?servico=${idServico}`, { headers }).subscribe({
         next: (res) => {
           console.log('Profissionais retornados da API:', res);
           this.profissionais = res;
@@ -139,7 +142,7 @@ export class AtendimentoReagendarComponent implements OnInit {
       novaObservacao: this.form.value.observacoes
     };
     console.log('Body enviado no reagendamento:', body);
-    this.http.put(`http://localhost:8080/api/atendimentos/${this.idAtendimento}/reagendar`, body, { headers, responseType: 'text' }).subscribe({
+  this.http.put(`${environment.atendimentosApi}api/atendimentos/${this.idAtendimento}/reagendar`, body, { headers, responseType: 'text' }).subscribe({
       next: () => {
         this.mensagem = 'Atendimento reagendado com sucesso!';
         setTimeout(() => {
