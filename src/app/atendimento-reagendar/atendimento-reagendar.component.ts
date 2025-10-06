@@ -135,25 +135,28 @@ export class AtendimentoReagendarComponent implements OnInit {
     const token = localStorage.getItem('ACCESS_TOKEN');
     console.log('Token JWT usado no reagendamento:', token);
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    // Ajuste para enviar data e hora separados
+    const [data, hora] = this.form.value.dataHora.split('T');
     const body = {
       idServico: Number(this.form.value.idServico),
       idProfissional: Number(this.form.value.idProfissional),
-      novaDataHora: this.formatarDataHora(this.form.value.dataHora),
-      novaObservacao: this.form.value.observacoes
+      data: data.split('-').reverse().join('/'), // "dd/MM/yyyy"
+      hora: hora,
+      observacoes: this.form.value.observacoes
     };
-    console.log('Body enviado no reagendamento:', body);
-  this.http.put(`${environment.atendimentosApi}api/atendimentos/${this.idAtendimento}/reagendar`, body, { headers, responseType: 'text' }).subscribe({
+    console.log('Body enviado no cadastro:', body);
+    this.http.post(`${environment.atendimentosApi}api/atendimentos`, body, { headers, responseType: 'text' }).subscribe({
       next: () => {
-        this.mensagem = 'Atendimento reagendado com sucesso!';
+        this.mensagem = 'Atendimento cadastrado com sucesso!';
         setTimeout(() => {
           this.router.navigate(['/consultar-atendimentos']);
         }, 1200);
       },
       error: (err) => {
         let erroDetalhe = err?.error?.mensagem || err?.message || JSON.stringify(err);
-        this.mensagem = 'Erro ao reagendar atendimento.' + (erroDetalhe ? ' Detalhe: ' + erroDetalhe : '');
+        this.mensagem = 'Erro ao cadastrar atendimento.' + (erroDetalhe ? ' Detalhe: ' + erroDetalhe : '');
         alert(this.mensagem);
-        console.error('Erro ao reagendar atendimento:', err);
+        console.error('Erro ao cadastrar atendimento:', err);
       }
     });
   }
