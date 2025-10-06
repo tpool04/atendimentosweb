@@ -150,7 +150,9 @@ export class AtendimentoReagendarComponent implements OnInit {
         }, 1200);
       },
       error: (err) => {
-        this.mensagem = 'Erro ao reagendar atendimento.';
+        let erroDetalhe = err?.error?.mensagem || err?.message || JSON.stringify(err);
+        this.mensagem = 'Erro ao reagendar atendimento.' + (erroDetalhe ? ' Detalhe: ' + erroDetalhe : '');
+        alert(this.mensagem);
         console.error('Erro ao reagendar atendimento:', err);
       }
     });
