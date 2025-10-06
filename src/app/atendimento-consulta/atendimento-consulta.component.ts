@@ -31,21 +31,26 @@ export class AtendimentoConsultaComponent implements OnInit {
     const idCliente = localStorage.getItem('ID_CLIENTE'); // ajuste conforme onde o id está salvo
     this.http.get<any[]>(`${environment.atendimentosApi}api/atendimentos/${idCliente}`, { headers }).subscribe({
       next: (res) => {
-        // Ordenar por data do serviço (assumindo campo dataHora ou similar)
-        function parseDataHora(str: string): Date {
-          if (!str) return new Date(0);
-          // Esperado: 'dd/MM/yyyy HH:mm'
-          const [data, hora] = str.split(' ');
-          if (!data || !hora) return new Date(0);
-          const [dia, mes, ano] = data.split('/').map(Number);
-          const [h, m] = hora.split(':').map(Number);
-          return new Date(ano, mes - 1, dia, h, m);
+        if (Array.isArray(res)) {
+          // Ordenar por data do serviço (assumindo campo dataHora ou similar)
+          function parseDataHora(str: string): Date {
+            if (!str) return new Date(0);
+            // Esperado: 'dd/MM/yyyy HH:mm'
+            const [data, hora] = str.split(' ');
+            if (!data || !hora) return new Date(0);
+            const [dia, mes, ano] = data.split('/').map(Number);
+            const [h, m] = hora.split(':').map(Number);
+            return new Date(ano, mes - 1, dia, h, m);
+          }
+          this.atendimentos = res.sort((a, b) => {
+            const dataA = parseDataHora(a.dataHora);
+            const dataB = parseDataHora(b.dataHora);
+            return dataB.getTime() - dataA.getTime(); // ordem decrescente
+          });
+        } else {
+          this.atendimentos = [];
+          this.mensagem = 'Nenhum atendimento encontrado ou resposta inesperada.';
         }
-        this.atendimentos = res.sort((a, b) => {
-          const dataA = parseDataHora(a.dataHora);
-          const dataB = parseDataHora(b.dataHora);
-          return dataB.getTime() - dataA.getTime(); // ordem decrescente
-        });
       },
       error: (err) => {
         this.mensagem = 'Erro ao buscar atendimentos.';
