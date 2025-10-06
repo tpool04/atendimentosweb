@@ -28,8 +28,7 @@ export class AtendimentoConsultaComponent implements OnInit {
   ngOnInit(): void {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    const idCliente = localStorage.getItem('ID_CLIENTE'); // ajuste conforme onde o id está salvo
-    this.http.get<any[]>(`${environment.atendimentosApi}api/atendimentos/${idCliente}`, { headers }).subscribe({
+    this.http.get<any[]>(`${environment.atendimentosApi}api/atendimentos/cliente`, { headers }).subscribe({
       next: (res) => {
         if (Array.isArray(res)) {
           // Ordenar por data do serviço (assumindo campo dataHora ou similar)
