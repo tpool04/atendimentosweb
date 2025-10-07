@@ -1,0 +1,59 @@
+<div class="clientes-container">
+  <h2 class="mb-4 text-primary fw-bold"><i class="bi bi-people-fill me-2"></i>Clientes e seus Atendimentos</h2>
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label for="filtroData" class="form-label">Filtrar por Data:</label>
+      <input type="date" id="filtroData" class="form-control" [(ngModel)]="filtroData" (change)="filtrarPorData()">
+    </div>
+    <div class="col-md-4">
+      <label for="filtroProfissional" class="form-label">Filtrar por Profissional:</label>
+      <select id="filtroProfissional" class="form-select" [(ngModel)]="filtroProfissional" (change)="filtrarPorProfissional()">
+        <option value="">Todos</option>
+        <option *ngFor="let profissional of profissionaisTodos" [value]="profissional">{{ profissional }}</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="filtroServico" class="form-label">Filtrar por Serviço:</label>
+      <select id="filtroServico" class="form-select" [(ngModel)]="filtroServico" (change)="filtrarPorServico()">
+        <option value="">Todos</option>
+        <option *ngFor="let servico of servicosTodos" [value]="servico.nome">{{ servico.nome }}</option>
+      </select>
+    </div>
+  </div>
+  <div *ngIf="mensagem" class="alert alert-danger">{{ mensagem }}</div>
+  <div *ngFor="let cliente of clientesFiltrados" class="card shadow-sm mb-4">
+    <div class="card-header bg-gradient bg-primary text-white d-flex justify-content-between align-items-center">
+      <div>
+        <i class="bi bi-person-circle me-2"></i>
+        <span class="fw-bold">{{ cliente.cliente.nome }}</span>
+        <span class="badge bg-light text-dark ms-2">CPF: {{ cliente.cliente.cpf }}</span>
+      </div>
+      <span class="small">{{ cliente.cliente.email }} | {{ cliente.cliente.telefone | phoneFormat }}</span>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-sm align-middle" *ngIf="cliente.atendimentos?.length">
+        <thead class="table-light">
+          <tr>
+            <th>Data/Hora</th>
+            <th>Serviço</th>
+            <th>Valor</th>
+            <th>Profissional</th>
+            <th>Telefone Profissional</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let atendimento of cliente.atendimentos">
+            <td><i class="bi bi-calendar-event me-1 text-secondary"></i>{{ atendimento.dataHora }}</td>
+            <td><i class="bi bi-scissors me-1 text-info"></i>{{ atendimento.nomeServico }}</td>
+            <td><span class="badge bg-success">R$ {{ atendimento.valorServico }}</span></td>
+            <td><i class="bi bi-person-badge me-1 text-primary"></i>{{ atendimento.nomeProfissional }}</td>
+            <td>{{ atendimento.telefoneProfissional | phoneFormat }}</td>
+            <td>{{ atendimento.observacoes }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!cliente.atendimentos?.length" class="text-muted">Nenhum atendimento encontrado.</div>
+    </div>
+  </div>
+</div>

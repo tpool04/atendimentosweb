@@ -13,11 +13,17 @@
         <li class="nav-item" *ngIf="isLogado">
           <a class="nav-link" aria-current="page" routerLink="consulta-cadastro">Acessar Conta</a>
         </li>
-        <li class="nav-item" *ngIf="isLogado">
-          <a class="nav-link" aria-current="page" routerLink="cadastrar-atendimentos">Cadastrar Atendimentos</a>
-        </li>
-        <li class="nav-item" *ngIf="isLogado">
-          <a class="nav-link" aria-current="page" routerLink="consultar-atendimentos">Consultar Atendimentos</a>
+        <li class="nav-item dropdown" *ngIf="isLogado">
+          <a class="nav-link dropdown-toggle" href="#" id="atendimentosMenu" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Atendimentos
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="atendimentosMenu">
+            <li><a class="dropdown-item" routerLink="cadastrar-atendimentos">Cadastrar Atendimento</a></li>
+            <li><a class="dropdown-item" routerLink="consultar-atendimentos">Consultar Atendimentos</a></li>
+            <li *ngIf="perfil === 'ADMIN'"><a class="dropdown-item" routerLink="clientes-atendimentos">Clientes e
+                Atendimentos</a></li>
+          </ul>
         </li>
         <li class="nav-item" *ngIf="isLogado && perfil === 'ADMIN'">
           <a class="nav-link" aria-current="page" routerLink="profissionais">Profissionais</a>
@@ -27,8 +33,10 @@
         </li>
       </ul>
       <div class="d-flex align-items-center ms-auto">
-        <span *ngIf="nomeCliente" class="text-white me-3">Olá, {{ nomeCliente }}<span *ngIf="perfil" class="badge bg-secondary ms-2">{{ perfil }}</span>
-          <button (click)="logoff()" class="btn btn-link btn-sm text-white ms-2 p-0" title="Sair" style="vertical-align: middle;">
+        <span *ngIf="nomeCliente" class="text-white me-3">Olá, {{ nomeCliente }}<span *ngIf="perfil"
+            class="badge bg-secondary ms-2">{{ perfil }}</span>
+          <button (click)="logoff()" class="btn btn-link btn-sm text-white ms-2 p-0" title="Sair"
+            style="vertical-align: middle;">
             <i class="bi bi-box-arrow-right" style="font-size: 1.2rem;"></i>
           </button>
         </span>

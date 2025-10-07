@@ -1,0 +1,30 @@
+h2 {
+  color: #1976d2;
+  margin-top: 32px;
+}
+.clientes-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.card {
+  border-radius: 12px;
+  border: none;
+}
+.card-header {
+  border-radius: 12px 12px 0 0;
+  font-size: 1.1em;
+  font-weight: 500;
+  background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+}
+.table {
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+th, td {
+  font-size: 0.98em;
+  vertical-align: middle;
+}
+.badge {
+  font-size: 0.95em;
+}

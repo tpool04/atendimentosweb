@@ -25,11 +25,14 @@ import { AtendimentoReagendarComponent } from './atendimento-reagendar/atendimen
 import { CadastroConsultaComponent } from './consulta-cadastro/cadastro-consulta.component';
 import { ClienteEditarComponent } from './cliente-editar/cliente-editar.component';
 import { Ativar2FAComponent } from './ativar-2fa/ativar-2fa.component';
+import { HomeExplicativaComponent } from './home-explicativa.component';
+import { ListarClientesAtendimentosComponent } from './listar-clientes-atendimentos.component';
+import { PhoneFormatPipe } from './phone-format.pipe';
 
 const routes: Routes = [
+  { path: '', component: HomeExplicativaComponent },
   { path: 'profissionais', component: ListarProfissionaisComponent },
   { path: 'listar-servicos', component: ListarServicosComponent },
-  { path: '', pathMatch: 'full', redirectTo: 'acessar-conta' },
   { path: 'acessar-conta', component: LoginComponent },
   { path: 'criar-conta', component: RegisterComponent },
   { path: 'cadastrar-atendimentos', component: AtendimentoCadastroComponent },
@@ -37,6 +40,8 @@ const routes: Routes = [
   { path: 'consulta-cadastro', component: CadastroConsultaComponent },
   { path: 'editar-cliente', component: ClienteEditarComponent },
   { path: 'editar-atendimento/:id', component: AtendimentoReagendarComponent },
+  { path: 'listar-clientes-atendimentos', component: ListarClientesAtendimentosComponent },
+  { path: 'clientes-atendimentos', component: ListarClientesAtendimentosComponent },
 ]
  
 @NgModule({
@@ -51,9 +56,12 @@ const routes: Routes = [
     AtendimentoReagendarComponent,
     Ativar2FAComponent,
     Login2FAComponent,
-  ListarProfissionaisComponent,
-  EditarProfissionalComponent,
-  ListarServicosComponent
+    ListarProfissionaisComponent,
+    EditarProfissionalComponent,
+    ListarServicosComponent,
+    HomeExplicativaComponent,
+    ListarClientesAtendimentosComponent,
+    PhoneFormatPipe
   ],
   imports: [
     BrowserModule,
