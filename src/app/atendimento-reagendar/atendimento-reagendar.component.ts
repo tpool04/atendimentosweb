@@ -142,21 +142,21 @@ export class AtendimentoReagendarComponent implements OnInit {
       idProfissional: Number(this.form.value.idProfissional),
       data: data.split('-').reverse().join('/'), // "dd/MM/yyyy"
       hora: hora,
-      observacoes: this.form.value.observacoes
+  novaObservacao: (this.form.value.observacoes ?? '').toString()
     };
-    console.log('Body enviado no cadastro:', body);
-    this.http.post(`${environment.atendimentosApi}api/atendimentos`, body, { headers, responseType: 'text' }).subscribe({
+    console.log('Body enviado no reagendamento:', body);
+    this.http.put(`${environment.atendimentosApi}api/atendimentos/reagendar/${this.idAtendimento}`, body, { headers, responseType: 'text' }).subscribe({
       next: () => {
-        this.mensagem = 'Atendimento cadastrado com sucesso!';
+        this.mensagem = 'Atendimento reagendado com sucesso!';
         setTimeout(() => {
           this.router.navigate(['/consultar-atendimentos']);
         }, 1200);
       },
       error: (err) => {
         let erroDetalhe = err?.error?.mensagem || err?.message || JSON.stringify(err);
-        this.mensagem = 'Erro ao cadastrar atendimento.' + (erroDetalhe ? ' Detalhe: ' + erroDetalhe : '');
+        this.mensagem = 'Erro ao reagendar atendimento.' + (erroDetalhe ? ' Detalhe: ' + erroDetalhe : '');
         alert(this.mensagem);
-        console.error('Erro ao cadastrar atendimento:', err);
+        console.error('Erro ao reagendar atendimento:', err);
       }
     });
   }
