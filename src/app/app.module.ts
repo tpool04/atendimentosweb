@@ -30,7 +30,7 @@ import { ListarClientesAtendimentosComponent } from './listar-clientes-atendimen
 import { PhoneFormatPipe } from './phone-format.pipe';
 
 const routes: Routes = [
-  { path: '', component: HomeExplicativaComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'acessar-conta' },
   { path: 'profissionais', component: ListarProfissionaisComponent },
   { path: 'listar-servicos', component: ListarServicosComponent },
   { path: 'acessar-conta', component: LoginComponent },
