@@ -121,7 +121,7 @@ export class EditarProfissionalComponent implements OnInit {
     console.log('Payload enviado ao backend:', payload);
     if (this.cadastro) {
       // Cadastro: POST
-  this.http.post(`${environment.atendimentosApi}api/profissionais`, payload, { headers }).subscribe({
+  this.http.post(`${environment.atendimentoService}api/profissionais`, payload, { headers }).subscribe({
         next: (res) => {
           this.isLoading = false;
           const msg = (res as any)?.message;
@@ -153,7 +153,7 @@ export class EditarProfissionalComponent implements OnInit {
       });
     } else {
       // Edição: PUT
-  this.http.put(`${environment.atendimentosApi}api/profissionais/${this.profissional.idProfissional}`, payload, { headers }).subscribe({
+  this.http.put(`${environment.atendimentoService}api/profissionais/${this.profissional.idProfissional}`, payload, { headers }).subscribe({
         next: (res) => {
           this.isLoading = false;
           const msg = (res as any)?.message;

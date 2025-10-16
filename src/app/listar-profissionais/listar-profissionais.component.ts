@@ -28,7 +28,7 @@ export class ListarProfissionaisComponent implements OnInit {
   carregarServicos() {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.get<any[]>(`${environment.atendimentosApi}api/servicos`, { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentoService}api/servicos`, { headers }).subscribe({
       next: (res) => {
         this.servicosDisponiveis = res;
       },
@@ -67,7 +67,7 @@ export class ListarProfissionaisComponent implements OnInit {
     this.isLoading = true;
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.get<any[]>(`${environment.atendimentosApi}api/profissionais/detalhados`, { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentoService}api/profissionais/detalhados`, { headers }).subscribe({
       next: (res) => {
         this.profissionais = res;
         this.isLoading = false;
@@ -83,7 +83,7 @@ export class ListarProfissionaisComponent implements OnInit {
   if (!confirm('Tem certeza que deseja excluir este profissional?')) return;
   const token = localStorage.getItem('ACCESS_TOKEN');
   const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.delete(`${environment.atendimentosApi}api/profissionais/${id}`, { headers }).subscribe({
+  this.http.delete(`${environment.atendimentoService}api/profissionais/${id}`, { headers }).subscribe({
     next: () => {
       this.carregarProfissionais();
     },

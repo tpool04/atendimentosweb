@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
  
   onSubmit(): void {
     this.isLoading = true;
-    this.httpClient.post(environment.atendimentosApi + "api/acessar-conta",
+  this.httpClient.post(environment.authService + "api/acessar-conta",
       this.formLogin.value).subscribe({
         next: (result: any) => {
           this.isLoading = false;
@@ -93,7 +93,7 @@ export class LoginComponent implements OnInit {
   console.log('[2FA] Código recebido do modal:', codigo);
     // ...existing code...
     this.loggingService.logError('Enviando POST para /api/confirmar-2fa', {
-      url: environment.atendimentosApi + 'api/confirmar-2fa',
+      url: environment.authService + 'api/confirmar-2fa',
       payload: {
         idCliente: this.tempLoginResult?.idCliente,
         codigo: codigo
@@ -105,7 +105,7 @@ export class LoginComponent implements OnInit {
     const idCliente = this.tempLoginResult.idCliente;
     const headers = { 'Content-Type': 'application/json' };
     this.isLoading = true;
-    this.httpClient.post(environment.atendimentosApi + 'api/confirmar-2fa', {
+  this.httpClient.post(environment.authService + 'api/confirmar-2fa', {
       idCliente: Number(idCliente),
       codigo: Number(codigo)
     }, { headers }).subscribe({

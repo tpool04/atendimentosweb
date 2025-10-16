@@ -28,7 +28,7 @@ export class AtendimentoConsultaComponent implements OnInit {
   ngOnInit(): void {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http.get<any[]>(`${environment.atendimentosApi}api/atendimentos/cliente`, { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentoService}api/atendimentos/cliente`, { headers }).subscribe({
       next: (res) => {
         if (Array.isArray(res)) {
           // Ordenar por data do serviço (assumindo campo dataHora ou similar)
@@ -66,7 +66,7 @@ export class AtendimentoConsultaComponent implements OnInit {
     if (!confirm('Tem certeza que deseja excluir este atendimento?')) return;
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.delete(`${environment.atendimentosApi}api/atendimentos/${a.idAtendimento}`, { headers, responseType: 'text' }).subscribe({
+  this.http.delete(`${environment.atendimentoService}api/atendimentos/${a.idAtendimento}`, { headers, responseType: 'text' }).subscribe({
       next: () => {
         this.atendimentos = this.atendimentos.filter(at => at.idAtendimento !== a.idAtendimento);
       },

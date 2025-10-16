@@ -22,7 +22,7 @@ export class CadastroConsultaComponent implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
-  this.http.get<any>(`${environment.atendimentosApi}api/clientes/me`, { headers }).subscribe({
+  this.http.get<any>(`${environment.clienteService}api/clientes/me`, { headers }).subscribe({
       next: (res) => {
         this.cliente = res.cliente;
         this.endereco = res.endereco;
@@ -43,7 +43,7 @@ export class CadastroConsultaComponent implements OnInit {
     // Recarregar dados do cliente para atualizar o status do 2FA
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = { Authorization: `Bearer ${token}` };
-  this.http.get<any>(`${environment.atendimentosApi}api/clientes/me`, { headers }).subscribe({
+  this.http.get<any>(`${environment.clienteService}api/clientes/me`, { headers }).subscribe({
       next: (res) => {
         this.cliente = res.cliente;
       },

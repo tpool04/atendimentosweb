@@ -3,7 +3,7 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="mb-3">
       <label>Novo Serviço:</label>
-      <select class="form-control" formControlName="idServico" required>
+      <select class="form-control" formControlName="idServico" required (change)="onTipoServicoChange()">
   <option value="" disabled>Selecione o serviço</option>
   <option *ngFor="let s of servicos" [value]="s.idServico.toString()">{{ s.nome }}</option>
       </select>

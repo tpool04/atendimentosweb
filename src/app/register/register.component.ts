@@ -66,7 +66,7 @@ export class RegisterComponent implements OnInit {
     this.mensagem_sucesso = '';
     this.mensagem_erro = '';
  
-    this.httpClient.post(environment.atendimentosApi + "api/criar-conta",
+  this.httpClient.post(environment.authService + "criar-conta",
       this.formCadastro.value, { responseType: 'text' })
       .subscribe({
         next: (result) => {

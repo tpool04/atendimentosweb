@@ -76,7 +76,7 @@ export class ListarServicosComponent implements OnInit {
     }
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.get<any[]>(`${environment.atendimentosApi}api/servicos/all`, { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentoService}api/servicos/all`, { headers }).subscribe({
       next: (res) => this.servicos = res,
       error: () => this.servicos = []
     });
@@ -103,7 +103,7 @@ export class ListarServicosComponent implements OnInit {
     }
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = { Authorization: `Bearer ${token}` };
-  this.http.put(`${environment.atendimentosApi}api/servicos/${this.servicoEditando.idServico}`, {
+  this.http.put(`${environment.atendimentoService}api/servicos/${this.servicoEditando.idServico}`, {
       nome: this.novoNome,
       valor: this.novoValor
     }, { headers }).subscribe({

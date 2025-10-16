@@ -13,7 +13,7 @@ export interface Profissional {
   providedIn: 'root'
 })
 export class ProfissionalService {
-  private apiUrl = environment.atendimentosApi + 'api/profissionais';
+  private apiUrl = environment.atendimentoService + 'api/profissionais';
 
   constructor(private http: HttpClient) { }
 

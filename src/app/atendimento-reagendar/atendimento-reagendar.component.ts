@@ -10,22 +10,12 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./atendimento-reagendar.component.css']
 })
 export class AtendimentoReagendarComponent implements OnInit {
-  voltarParaConsulta() {
-    this.router.navigate(['/consultar-atendimentos']);
-  }
   servicos: any[] = [];
   profissionais: any[] = [];
   todosProfissionais: any[] = [];
-
-  private formatarDataHora(iso: string): string {
-    if (!iso) return '';
-    const [date, time] = iso.split('T');
-    const [ano, mes, dia] = date.split('-');
-    return `${dia}/${mes}/${ano} ${time?.slice(0,5)}`;
-  }
   form: FormGroup;
   mensagem: string = '';
-  idAtendimento: number;
+  idAtendimento: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -39,121 +29,125 @@ export class AtendimentoReagendarComponent implements OnInit {
       dataHora: ['', Validators.required],
       observacoes: ['']
     });
-    this.idAtendimento = 0;
+  }
+
+  voltarParaConsulta(): void {
+    this.router.navigate(['/consultar-atendimentos']);
+  }
+
+  private formatarDataHora(iso: string): string {
+    if (!iso) return '';
+    const [date, time] = iso.split('T');
+    const [ano, mes, dia] = date.split('-');
+    return `${dia}/${mes}/${ano} ${time?.slice(0,5)}`;
   }
 
   ngOnInit(): void {
-    this.idAtendimento = Number(this.route.snapshot.paramMap.get('id'));
+    // Carregar serviços e profissionais antes de buscar atendimento
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-
-    // Buscar serviços e todos profissionais juntos
-  this.http.get<any[]>(`${environment.atendimentosApi}api/servicos`, { headers }).subscribe({
-      next: (servicos) => {
-        console.log('Serviços carregados (antes do filtro):', servicos);
-        const servicosValidos = servicos.filter(s => s && s.idServico);
-        console.log('Serviços válidos (após filtro):', servicosValidos);
-        this.servicos = servicosValidos;
-        // Buscar dados do atendimento só depois dos serviços carregados
-  this.http.get<any>(`${environment.atendimentosApi}api/atendimentos/${this.idAtendimento}`, { headers }).subscribe({
-          next: (atendimento) => {
-            // Converter dataHora para formato datetime-local
-            let dataHoraInput = '';
-            if (atendimento.dataHora) {
-              const [data, hora] = atendimento.dataHora.split(' ');
-              if (data && hora) {
-                const [dia, mes, ano] = data.split('/');
-                dataHoraInput = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}T${hora}`;
-              }
-            }
-            // Buscar idServico pelo nome
-            const idServico = this.servicos.find(s => s.nome === atendimento.nomeServico)?.idServico?.toString() || '';
-            this.form.patchValue({
-              dataHora: dataHoraInput,
-              observacoes: atendimento.observacoes || '',
-              idServico: idServico
-            });
-            // Só buscar profissionais e setar profissional depois
-            if (idServico) {
-              this.http.get<any[]>(`${environment.atendimentosApi}api/profissionais?servico=${idServico}`, { headers }).subscribe({
-                next: (res) => {
-                  this.profissionais = res;
-                  console.log('[DEBUG] Nome profissional do atendimento:', atendimento.nomeProfissional);
-                  console.log('[DEBUG] Profissionais retornados:', res);
-                  // Buscar idProfissional pelo nome exatamente como veio do backend
-                  const idProfissional = res.find(p => p.nome === atendimento.nomeProfissional)?.idProfissional?.toString() || '';
-                  console.log('[DEBUG] idProfissional encontrado:', idProfissional);
-                  setTimeout(() => {
-                    this.form.patchValue({
-                      idProfissional: idProfissional
-                    });
-                  }, 0);
-                },
-                error: () => {
-                  this.profissionais = [];
+    // Supondo que existam endpoints para listar serviços e profissionais
+    Promise.all([
+      this.http.get<any[]>(`${environment.atendimentoService}api/servicos`, { headers }).toPromise(),
+      this.http.get<any[]>(`${environment.atendimentoService}api/profissionais`, { headers }).toPromise()
+    ]).then(([servicos, profissionais]) => {
+      this.servicos = servicos || [];
+      this.todosProfissionais = profissionais || [];
+      this.profissionais = profissionais || [];
+      this.route.paramMap.subscribe(params => {
+        const idAtendimento = params.get('id');
+        const idCliente = localStorage.getItem('ID_CLIENTE');
+        if (idAtendimento && idCliente) {
+          this.idAtendimento = +idAtendimento;
+          this.http.get<any>(`${environment.clienteService}api/clientes/${idCliente}/atendimentos/${idAtendimento}`, { headers }).subscribe({
+            next: (res) => {
+              console.log('Resposta do backend ao buscar atendimento:', res);
+              const atendimento = res.atendimento || res;
+              // Buscar idServico pelo nomeServico
+              let idServico = '';
+              let profissionaisFiltrados: any[] = [];
+              if (atendimento.nomeServico && this.servicos.length > 0) {
+                const servicoObj = this.servicos.find(s => s.nome === atendimento.nomeServico);
+                if (servicoObj) {
+                  idServico = servicoObj.idServico;
+                  profissionaisFiltrados = servicoObj.profissionais || [];
                 }
+              }
+              // Buscar idProfissional pelo nomeProfissional, mas só setar se existir na lista filtrada
+              let idProfissional = '';
+              if (atendimento.nomeProfissional && profissionaisFiltrados.length > 0) {
+                const profissionalObj = profissionaisFiltrados.find(p => p.nome === atendimento.nomeProfissional);
+                if (profissionalObj) {
+                  idProfissional = profissionalObj.idProfissional;
+                }
+              }
+              // Converter dataHora para yyyy-MM-ddTHH:mm
+              let dataHoraFormatada = '';
+              if (atendimento.dataHora) {
+                const [data, hora] = atendimento.dataHora.split(' ');
+                const [dia, mes, ano] = data.split('/');
+                dataHoraFormatada = `${ano}-${mes}-${dia}T${hora}`;
+              }
+              this.profissionais = profissionaisFiltrados;
+              this.form.patchValue({
+                idServico: idServico,
+                idProfissional: idProfissional,
+                dataHora: dataHoraFormatada,
+                observacoes: atendimento.observacoes || ''
               });
+            },
+            error: (err) => {
+              this.mensagem = 'Erro ao carregar atendimento para edição.';
+              console.error('Erro ao buscar atendimento:', err);
             }
-          },
-          error: (err) => {
-            this.mensagem = 'Erro ao buscar dados do atendimento.';
-            console.error('Erro ao buscar dados do atendimento:', err);
-          }
-        });
-      },
-      error: (err) => {
-        this.mensagem = 'Erro ao buscar serviços.';
-        console.error('Erro ao buscar serviços:', err);
-      }
-    });
-
-    // Atualizar profissionais ao trocar serviço
-    this.form.get('idServico')?.valueChanges.subscribe(idServico => {
-  this.profissionais = [];
-  this.form.get('idProfissional')?.setValue('');
-  console.log('idServico selecionado (valueChanges):', idServico);
-  if (!idServico || idServico === 'undefined') return;
-      this.profissionais = [];
-      this.form.get('idProfissional')?.setValue('');
-      if (!idServico) return;
-  this.http.get<any[]>(`${environment.atendimentosApi}api/profissionais?servico=${idServico}`, { headers }).subscribe({
-        next: (res) => {
-          console.log('Profissionais retornados da API:', res);
-          this.profissionais = res;
-        },
-        error: (err) => {
-          this.mensagem = 'Erro ao buscar profissionais do serviço.';
-          this.profissionais = [];
-          console.error('Erro ao buscar profissionais do serviço:', err);
+          });
         }
       });
     });
   }
 
+  onTipoServicoChange(): void {
+    const idServico = Number(this.form.value.idServico);
+    if (!isNaN(idServico) && idServico > 0) {
+      const servicoSelecionado = this.servicos.find(s => s.idServico === idServico);
+      this.profissionais = servicoSelecionado ? servicoSelecionado.profissionais : [];
+      this.form.patchValue({ idProfissional: '' });
+    } else {
+      this.profissionais = [];
+      this.form.patchValue({ idProfissional: '' });
+    }
+  }
+
   onSubmit(): void {
     if (this.form.invalid) return;
     const token = localStorage.getItem('ACCESS_TOKEN');
-    console.log('Token JWT usado no reagendamento:', token);
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    // Ajuste para enviar data e hora separados
     const [data, hora] = this.form.value.dataHora.split('T');
     const body = {
       idServico: Number(this.form.value.idServico),
       idProfissional: Number(this.form.value.idProfissional),
       data: data.split('-').reverse().join('/'), // "dd/MM/yyyy"
       hora: hora,
-  novaObservacao: (this.form.value.observacoes ?? '').toString()
+      novaObservacao: (this.form.value.observacoes ?? '').toString()
     };
-    console.log('Body enviado no reagendamento:', body);
-    this.http.put(`${environment.atendimentosApi}api/atendimentos/reagendar/${this.idAtendimento}`, body, { headers, responseType: 'text' }).subscribe({
+    this.http.put(`${environment.atendimentoService}api/atendimentos/reagendar/${this.idAtendimento}`, body, { headers, responseType: 'text' }).subscribe({
       next: () => {
         this.mensagem = 'Atendimento reagendado com sucesso!';
-        setTimeout(() => {
-          this.router.navigate(['/consultar-atendimentos']);
-        }, 1200);
+        setTimeout(() => { this.router.navigate(['/consultar-atendimentos']); }, 1200);
       },
-      error: (err) => {
-        let erroDetalhe = err?.error?.mensagem || err?.message || JSON.stringify(err);
+      error: (err: any) => {
+        let erroDetalhe = '';
+        if (err?.error) {
+          if (typeof err.error === 'string') {
+            erroDetalhe = err.error;
+          } else if (err.error.mensagem) {
+            erroDetalhe = err.error.mensagem;
+          } else {
+            erroDetalhe = JSON.stringify(err.error);
+          }
+        } else {
+          erroDetalhe = err?.message || JSON.stringify(err);
+        }
         this.mensagem = 'Erro ao reagendar atendimento.' + (erroDetalhe ? ' Detalhe: ' + erroDetalhe : '');
         alert(this.mensagem);
         console.error('Erro ao reagendar atendimento:', err);

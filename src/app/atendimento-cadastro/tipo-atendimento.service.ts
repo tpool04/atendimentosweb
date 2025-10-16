@@ -12,7 +12,7 @@ export interface TipoAtendimento {
   providedIn: 'root'
 })
 export class TipoAtendimentoService {
-  private apiUrl = environment.atendimentosApi + 'api/servicos';
+  private apiUrl = environment.atendimentoService + 'api/servicos';
 
   constructor(private http: HttpClient) { }
 

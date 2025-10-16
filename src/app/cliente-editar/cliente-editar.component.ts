@@ -73,7 +73,7 @@ export class ClienteEditarComponent implements OnInit {
   ngOnInit(): void {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.get<any>(`${environment.atendimentosApi}api/clientes/me`, { headers }).subscribe({
+  this.http.get<any>(`${environment.clienteService}api/clientes/me`, { headers }).subscribe({
       next: (res) => {
         let cep = res.endereco.cep || '';
         // Formatar para 12345-678 se vier como 12345678
@@ -99,8 +99,8 @@ export class ClienteEditarComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.invalid) return;
-  const token = localStorage.getItem('ACCESS_TOKEN');
-  console.log('Token JWT usado na atualização:', token);
+    const token = localStorage.getItem('ACCESS_TOKEN');
+    console.log('Token JWT usado na atualização:', token);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
@@ -118,15 +118,16 @@ export class ClienteEditarComponent implements OnInit {
       uf: this.form.value.uf,
       cep: this.form.value.cep
     };
-  console.log('Body enviado na atualização:', body);
-  this.http.put(`${environment.atendimentosApi}api/clientes/me`, body, { headers, responseType: 'text' }).subscribe({
+    console.log('Body enviado na atualização:', body);
+    // Atualiza dados do cliente
+    this.http.put(`${environment.clienteService}api/clientes/me`, body, { headers, responseType: 'text' }).subscribe({
       next: () => {
         this.mensagem = 'Dados atualizados com sucesso!';
         setTimeout(() => {
           this.router.navigate(['/consulta-cadastro']);
         }, 1200);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erro ao atualizar dados:', err);
         if (err && err.error && err.error.message) {
           this.mensagem = 'Erro ao atualizar dados: ' + err.error.message;

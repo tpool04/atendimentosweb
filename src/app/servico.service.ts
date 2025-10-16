@@ -22,7 +22,7 @@ export class ServicoService {
     const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
     return this.http.delete(`${this.apiUrl}/${id}`, headers ? { headers, responseType: 'text' } : { responseType: 'text' });
   }
-  private apiUrl = environment.atendimentosApi + 'api/servicos';
+  private apiUrl = environment.atendimentoService + 'api/servicos';
 
   constructor(private http: HttpClient) {}
 

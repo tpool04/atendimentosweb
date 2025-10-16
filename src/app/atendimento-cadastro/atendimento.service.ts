@@ -15,7 +15,7 @@ export interface Atendimento {
   providedIn: 'root'
 })
 export class AtendimentoService {
-  private apiUrl = environment.atendimentosApi + 'api/atendimentos';
+  private apiUrl = environment.atendimentoService + 'api/atendimentos';
 
   constructor(private http: HttpClient) { }
 

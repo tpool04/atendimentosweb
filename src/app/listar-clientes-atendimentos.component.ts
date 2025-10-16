@@ -36,11 +36,11 @@ export class ListarClientesAtendimentosComponent implements OnInit {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     // Busca todos os serviços cadastrados
-    this.http.get<any[]>(`${environment.atendimentosApi}api/servicos/all`, { headers }).subscribe({
+  this.http.get<any[]>(`${environment.atendimentoService}api/servicos/all`, { headers }).subscribe({
       next: (servicos) => {
         this.servicosTodos = servicos;
         // Busca todos os atendimentos/clientes
-        this.http.get<any[]>(`${environment.atendimentosApi}api/clientes/atendimentos-clientes`, { headers }).subscribe({
+  this.http.get<any[]>(`${environment.clienteService}api/clientes/atendimentos-clientes`, { headers }).subscribe({
           next: (res) => {
             this.clientes = res;
             this.clientesFiltrados = res;
