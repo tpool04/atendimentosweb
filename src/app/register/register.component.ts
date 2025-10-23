@@ -62,19 +62,24 @@ export class RegisterComponent implements OnInit {
   }
  
   onSubmit() {
- 
+
     this.mensagem_sucesso = '';
     this.mensagem_erro = '';
- 
-  this.httpClient.post(environment.authService + "criar-conta",
-      this.formCadastro.value, { responseType: 'text' })
+
+    const headers = { 'Content-Type': 'application/json' };
+    this.httpClient.post(environment.authService + 'api/criar-conta',
+      this.formCadastro.value, { headers, responseType: 'text' })
       .subscribe({
         next: (result) => {
           this.mensagem_sucesso = result;
           this.formCadastro.reset();
         },
         error: (e) => {
-          this.mensagem_erro = e.error;
+          if (e?.error) {
+            this.mensagem_erro = typeof e.error === 'string' ? e.error : e.error.message || JSON.stringify(e.error);
+          } else {
+            this.mensagem_erro = `Erro ao criar conta (status ${e?.status}).`;
+          }
         }
       })
   }

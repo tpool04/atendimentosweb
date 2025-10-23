@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { AtendimentoService } from '../atendimento-cadastro/atendimento.service';
 
 @Component({
   selector: 'app-atendimento-consulta',
@@ -23,12 +24,14 @@ export class AtendimentoConsultaComponent implements OnInit {
   atendimentos: any[] = [];
   mensagem: string = '';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private atendimentoService: AtendimentoService) { }
 
   ngOnInit(): void {
+    // Preferir o endpoint POST /api/por-cliente do atendimentoService
     const token = localStorage.getItem('ACCESS_TOKEN');
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.get<any[]>(`${environment.atendimentoService}api/atendimentos/cliente`, { headers }).subscribe({
+    const idClienteStr = localStorage.getItem('ID_CLIENTE');
+    const idCliente = idClienteStr ? Number(idClienteStr) : undefined;
+    this.atendimentoService.listarPorCliente(idCliente).subscribe({
       next: (res) => {
         if (Array.isArray(res)) {
           // Ordenar por data do serviço (assumindo campo dataHora ou similar)
@@ -52,8 +55,23 @@ export class AtendimentoConsultaComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.mensagem = 'Erro ao buscar atendimentos.';
-        console.error('Erro ao buscar atendimentos:', err);
+        console.warn('POST /api/por-cliente falhou, tentando GET /api/atendimentos/cliente como fallback', err);
+        // Fallback: tentar o GET antigo
+        const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+        this.http.get<any[]>(`${environment.atendimentoService}api/atendimentos/cliente`, { headers }).subscribe({
+          next: (res2) => {
+            if (Array.isArray(res2)) {
+              this.atendimentos = res2;
+            } else {
+              this.atendimentos = [];
+              this.mensagem = 'Nenhum atendimento encontrado ou resposta inesperada.';
+            }
+          },
+          error: (err2) => {
+            this.mensagem = 'Erro ao buscar atendimentos.';
+            console.error('Erro ao buscar atendimentos (fallback):', err2);
+          }
+        });
       }
     });
   }

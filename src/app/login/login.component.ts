@@ -50,15 +50,16 @@ export class LoginComponent implements OnInit {
       this.formLogin.value).subscribe({
         next: (result: any) => {
           this.isLoading = false;
-          if (result.nome && result.nome.startsWith('2FA necessário. Use o ID:')) {
+          // Se o backend indicar que 2FA é necessário ele pode retornar token null e idCliente
+          if ((!result || !result.token) && result?.idCliente) {
             // 2FA está ativado para esse usuário, abrir modal
             this.tempLoginResult = result;
             console.log('[LOGIN] Perfil recebido (2FA necessário):', result.perfil);
             if (result.perfil) {
-              localStorage.setItem("PERFIL", result.perfil);
+              localStorage.setItem('PERFIL', result.perfil);
             }
             this.show2FAModal = true;
-          } else if (result.token) {
+          } else if (result && result.token) {
             // Login permitido para qualquer usuário com token válido
             localStorage.setItem("ACCESS_TOKEN", result.token);
             localStorage.setItem("NOME_CLIENTE", result.nome);
@@ -103,12 +104,16 @@ export class LoginComponent implements OnInit {
     if (!this.tempLoginResult) return;
     const token = localStorage.getItem('ACCESS_TOKEN');
     const idCliente = this.tempLoginResult.idCliente;
-    const headers = { 'Content-Type': 'application/json' };
+    const headersObj: any = { 'Content-Type': 'application/json' };
+    // Se o backend retornou um token temporário junto com o fluxo 2FA, inclua no header
+    if (this.tempLoginResult?.token) {
+      headersObj['Authorization'] = `Bearer ${this.tempLoginResult.token}`;
+    }
     this.isLoading = true;
   this.httpClient.post(environment.authService + 'api/confirmar-2fa', {
       idCliente: Number(idCliente),
       codigo: Number(codigo)
-    }, { headers }).subscribe({
+    }, { headers: headersObj }).subscribe({
       next: (res: any) => {
         this.isLoading = false;
         if (res.verified && res.token) {

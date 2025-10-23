@@ -1,0 +1,27 @@
+<div class="container">
+  <h3>Lista de clientes</h3>
+  <div *ngIf="erro" class="alert alert-danger">{{ erro }}</div>
+  <table class="table table-sm" *ngIf="clientes?.length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>2FA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of clientes">
+        <td>{{ c.idCliente }}</td>
+        <td>{{ c.nome }}</td>
+        <td>{{ c.cpf }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.telefone }}</td>
+        <td>{{ c.is2FAEnabled ? 'Sim' : 'Não' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!clientes?.length && !erro" class="text-muted">Nenhum cliente encontrado.</div>
+</div>

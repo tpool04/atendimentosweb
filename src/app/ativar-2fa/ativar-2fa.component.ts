@@ -46,7 +46,7 @@ export class Ativar2FAComponent {
     this.isLoading = true;
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.post<any>(`${environment.atendimentoService}api/2fa/ativar/${userId}`, {}, { headers }).subscribe({
+  this.http.post<any>(`${environment.authService}api/2fa/ativar/${userId}`, {}, { headers }).subscribe({
       next: (res) => {
         console.log('[2FA] Resposta do backend:', res);
         // res.qrCodeUrl já é o link do QR Code pronto
@@ -80,7 +80,7 @@ export class Ativar2FAComponent {
     console.log('[2FA] idCliente enviado:', idCliente);
     console.log('[2FA] Payload enviado:', payload);
     console.log('[2FA] Header Authorization:', headers.get('Authorization'));
-  this.http.post<any>(`${environment.atendimentoService}api/confirmar-2fa`, payload, { headers }).subscribe({
+  this.http.post<any>(`${environment.authService}api/confirmar-2fa`, payload, { headers }).subscribe({
       next: (res) => {
         if (res.verified) {
           this.mensagem = 'Autenticação em dois fatores ativada com sucesso! Você está mais protegido.';

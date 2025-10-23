@@ -75,23 +75,28 @@ export class ClienteEditarComponent implements OnInit {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
   this.http.get<any>(`${environment.clienteService}api/clientes/me`, { headers }).subscribe({
       next: (res) => {
-        let cep = res.endereco.cep || '';
+        if (!res) return;
+        // Aceitar tanto { cliente, endereco } quanto resposta plana
+        const cliente = res.cliente ? res.cliente : res;
+        const endereco = res.endereco ? res.endereco : res;
+        let cep = endereco?.cep || '';
+        if (typeof cep === 'number') cep = String(cep);
         // Formatar para 12345-678 se vier como 12345678
-        if (cep.length === 8 && cep.indexOf('-') === -1) {
+        if (cep && cep.length === 8 && cep.indexOf('-') === -1) {
           cep = cep.replace(/(\d{5})(\d{3})/, '$1-$2');
         }
         this.form.patchValue({
-          nome: res.cliente.nome,
-          cpf: res.cliente.cpf,
-          email: res.cliente.email,
-          telefone: res.cliente.telefone,
-          logradouro: res.endereco.logradouro,
-          numero: res.endereco.numero,
-          complemento: res.endereco.complemento,
-          bairro: res.endereco.bairro,
-          cidade: res.endereco.cidade,
-          uf: res.endereco.uf,
-          cep: cep
+          nome: cliente.nome || '',
+          cpf: cliente.cpf || '',
+          email: cliente.email || '',
+          telefone: cliente.telefone || '',
+          logradouro: endereco.logradouro || '',
+          numero: endereco.numero || '',
+          complemento: endereco.complemento || '',
+          bairro: endereco.bairro || '',
+          cidade: endereco.cidade || '',
+          uf: endereco.uf || '',
+          cep: cep || ''
         });
       }
     });

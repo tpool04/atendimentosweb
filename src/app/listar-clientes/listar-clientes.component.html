@@ -1,0 +1,40 @@
+<div class="container mt-4">
+  <div *ngIf="mensagemErro" class="alert alert-danger mb-3">{{ mensagemErro }}</div>
+  <h4>Lista de Clientes</h4>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>
+            Nome
+            <button class="btn btn-sm btn-link text-white p-0 ms-2" style="vertical-align: middle;" (click)="sortBy('nome')" title="Ordenar">
+              <i [ngClass]="{'bi bi-arrow-down-up': sortField !== 'nome', 'bi bi-sort-alpha-down': sortField === 'nome' && sortDir === 'asc', 'bi bi-sort-alpha-up-alt': sortField === 'nome' && sortDir === 'desc'}"></i>
+            </button>
+          </th>
+          <th>Email</th>
+          <th>Telefone</th>
+          <th style="background-color: #212529; color: #fff;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of clientes">
+          <td>{{ c.idCliente || c.id }}</td>
+          <td>{{ c.nome }}</td>
+          <td>{{ c.email }}</td>
+          <td>{{ c.telefone }}</td>
+          <td>
+            <div class="d-flex gap-2">
+              <!-- futuro: botão editar se necessário -->
+              <button class="btn btn-sm btn-danger d-flex align-items-center" (click)="excluirCliente(c)">
+                <span>Excluir</span>
+                <i class="bi bi-trash ms-1"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="!clientes?.length" class="alert alert-warning mt-3">Nenhum cliente encontrado.</div>
+</div>

@@ -24,8 +24,34 @@ export class CadastroConsultaComponent implements OnInit {
     });
   this.http.get<any>(`${environment.clienteService}api/clientes/me`, { headers }).subscribe({
       next: (res) => {
-        this.cliente = res.cliente;
-        this.endereco = res.endereco;
+        // Alguns backends retornam { cliente, endereco }, outros retornam um objeto plano com os campos
+        if (res) {
+          if (res.cliente || res.endereco) {
+            this.cliente = res.cliente || null;
+            this.endereco = res.endereco || null;
+          } else {
+            // Mapear campos do objeto raiz para cliente/endereco
+            this.cliente = {
+              nome: res.nome,
+              cpf: res.cpf,
+              email: res.email,
+              telefone: res.telefone,
+              twoFactorAtivo: res.twoFactorAtivo
+            };
+            this.endereco = {
+              logradouro: res.logradouro,
+              numero: res.numero,
+              complemento: res.complemento,
+              bairro: res.bairro,
+              cidade: res.cidade,
+              uf: res.uf,
+              cep: res.cep
+            };
+          }
+        } else {
+          this.cliente = null;
+          this.endereco = null;
+        }
       },
       error: (err) => {
         this.cliente = null;

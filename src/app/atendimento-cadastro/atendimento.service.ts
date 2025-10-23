@@ -28,6 +28,24 @@ export class AtendimentoService {
     return this.http.get<any[]>(this.apiUrl + '/meus', { headers });
   }
 
+  /**
+   * Lista atendimentos por cliente usando POST /api/por-cliente.
+   * Se for necessário enviar um payload com { idCliente }, envie aqui.
+   */
+  listarPorCliente(idCliente?: number): Observable<any[]> {
+    const token = localStorage.getItem('ACCESS_TOKEN');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    const url = `${this.apiUrl}/por-cliente`;
+    if (typeof idCliente === 'number') {
+      return this.http.post<any[]>(url, { idCliente }, { headers });
+    }
+    // Se não tiver idCliente, tentar chamar sem payload (alguns backends aceitam)
+    return this.http.post<any[]>(url, {}, { headers });
+  }
+
   cadastrarAtendimento(atendimento: Atendimento): Observable<any> {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({
