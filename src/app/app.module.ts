@@ -28,6 +28,8 @@ import { Ativar2FAComponent } from './ativar-2fa/ativar-2fa.component';
 import { HomeExplicativaComponent } from './home-explicativa.component';
 import { ListarClientesAtendimentosComponent } from './listar-clientes-atendimentos.component';
 import { ListarClientesComponent } from './listar-clientes/listar-clientes.component';
+import { ForgotPasswordComponent } from './password/forgot-password.component';
+import { ResetPasswordComponent } from './password/reset-password.component';
 import { PhoneFormatPipe } from './phone-format.pipe';
 
 const routes: Routes = [
@@ -44,6 +46,8 @@ const routes: Routes = [
   { path: 'listar-clientes-atendimentos', component: ListarClientesAtendimentosComponent },
   { path: 'clientes-atendimentos', component: ListarClientesAtendimentosComponent },
   { path: 'listar-clientes', component: ListarClientesComponent },
+  { path: 'esqueci-senha', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
 ]
  
 @NgModule({
@@ -64,6 +68,8 @@ const routes: Routes = [
     HomeExplicativaComponent,
     ListarClientesAtendimentosComponent,
   ListarClientesComponent,
+    ForgotPasswordComponent,
+  ResetPasswordComponent,
     PhoneFormatPipe
   ],
   imports: [
