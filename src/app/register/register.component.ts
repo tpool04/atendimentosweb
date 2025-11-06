@@ -75,11 +75,30 @@ export class RegisterComponent implements OnInit {
           this.formCadastro.reset();
         },
         error: (e) => {
-          if (e?.error) {
-            this.mensagem_erro = typeof e.error === 'string' ? e.error : e.error.message || JSON.stringify(e.error);
-          } else {
-            this.mensagem_erro = `Erro ao criar conta (status ${e?.status}).`;
+          // Melhor tratamento de erros de rede / CORS / resposta do backend
+          console.error('Erro ao criar conta:', e);
+
+          // Caso o erro seja um ProgressEvent (falha de rede / CORS), o objeto em e.error
+          // pode ser um Event com { isTrusted: true } — isso não é uma mensagem útil para o usuário.
+          if (e?.error instanceof ProgressEvent || e?.error?.isTrusted) {
+            this.mensagem_erro = `Erro de rede: não foi possível conectar ao serviço de autenticação em ${environment.authService}. Verifique se o backend está rodando e se as configurações de CORS permitem requisições desta origem.`;
+            return;
           }
+
+          if (e?.error) {
+            // Se o backend retornou texto ou JSON com mensagem, preferir mostrar isso
+            if (typeof e.error === 'string') {
+              this.mensagem_erro = e.error;
+            } else if (e.error.message) {
+              this.mensagem_erro = e.error.message;
+            } else {
+              this.mensagem_erro = JSON.stringify(e.error);
+            }
+            return;
+          }
+
+          // Fallback genérico
+          this.mensagem_erro = `Erro ao criar conta (status ${e?.status}).`;
         }
       })
   }

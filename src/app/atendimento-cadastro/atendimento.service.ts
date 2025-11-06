@@ -40,10 +40,13 @@ export class AtendimentoService {
     });
     const url = `${this.apiUrl}/por-cliente`;
     if (typeof idCliente === 'number') {
-      return this.http.post<any[]>(url, { idCliente }, { headers });
+      // O backend espera um array de IDs (List<Integer>), não um objeto.
+      return this.http.post<any[]>(url, [idCliente], { headers });
     }
-    // Se não tiver idCliente, tentar chamar sem payload (alguns backends aceitam)
-    return this.http.post<any[]>(url, {}, { headers });
+    // Se não tiver idCliente disponível, usar o endpoint GET /cliente que infere pelo token
+    // Removemos Content-Type para chamadas GET
+    const getHeaders = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    return this.http.get<any[]>(`${this.apiUrl}/cliente`, { headers: getHeaders });
   }
 
   cadastrarAtendimento(atendimento: Atendimento): Observable<any> {
