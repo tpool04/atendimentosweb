@@ -21,6 +21,7 @@
           <ul class="dropdown-menu" aria-labelledby="atendimentosMenu">
             <li><a class="dropdown-item" routerLink="cadastrar-atendimentos">Cadastrar Atendimento</a></li>
             <li><a class="dropdown-item" routerLink="consultar-atendimentos">Consultar Atendimentos</a></li>
+            <li *ngIf="perfil === 'ADMIN'"><a class="dropdown-item" routerLink="dashboard-atendimentos">Dashboard</a></li>
             <li *ngIf="perfil === 'ADMIN'"><a class="dropdown-item" routerLink="clientes-atendimentos">Clientes e
                 Atendimentos</a></li>
           </ul>

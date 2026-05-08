@@ -1,0 +1,59 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-1">Dashboard de Atendimentos</h4>
+      <p class="text-muted mb-0">Totais por profissional.</p>
+    </div>
+    <button class="btn btn-outline-primary" (click)="carregarDashboard()">
+      <i class="bi bi-arrow-clockwise me-1"></i>Atualizar
+    </button>
+  </div>
+
+  <div *ngIf="mensagem" class="alert alert-info">{{ mensagem }}</div>
+  <div *ngIf="carregando" class="alert alert-secondary">Carregando dashboard...</div>
+
+  <div *ngIf="!carregando && analytics.length > 0" class="row g-3 mb-4">
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-resumo shadow-sm h-100">
+        <div class="card-body">
+          <p class="resumo-label mb-2">Total de atendimentos</p>
+          <h2 class="resumo-valor mb-0">{{ totalGeralAtendimentos }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-resumo shadow-sm h-100">
+        <div class="card-body">
+          <p class="resumo-label mb-2">Profissionais no ranking</p>
+          <h2 class="resumo-valor mb-0">{{ analytics.length }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!carregando && analytics.length > 0" class="card shadow-sm mb-4">
+    <div class="card-body">
+      <canvas #graficoLinha style="max-height: 320px;"></canvas>
+    </div>
+  </div>
+
+  <div *ngIf="!carregando && analytics.length > 0" class="row g-3">
+    <div class="col-12 col-md-6 col-xl-4" *ngFor="let item of analytics; let idx = index">
+      <div class="card card-profissional shadow-sm h-100">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <span class="badge rounded-pill ranking-badge">#{{ idx + 1 }}</span>
+            <small class="text-muted">ID {{ item.profissionalId }}</small>
+          </div>
+
+          <h5 class="mb-3 nome-profissional">{{ item.profissionalNome }}</h5>
+
+          <div class="mt-auto d-flex justify-content-between align-items-end">
+            <span class="text-muted">Atendimentos</span>
+            <span class="total-profissional">{{ item.totalAtendimentos }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

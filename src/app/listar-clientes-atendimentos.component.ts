@@ -17,6 +17,7 @@ export class ListarClientesAtendimentosComponent implements OnInit {
   profissionaisUnicos: string[] = [];
   profissionaisTodos: string[] = [];
   servicosTodos: any[] = [];
+  perfil: string | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -33,6 +34,7 @@ export class ListarClientesAtendimentosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.perfil = localStorage.getItem('PERFIL');
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     // Busca todos os serviços cadastrados
@@ -111,5 +113,93 @@ export class ListarClientesAtendimentosComponent implements OnInit {
       });
       return { ...cliente, atendimentos: atendimentosFiltrados };
     }).filter(cliente => cliente.atendimentos.length > 0);
+  }
+
+  exportarParaExcel(): void {
+    const dados: any[] = [];
+    
+    // Preparar dados para exportação
+    this.clientesFiltrados.forEach(cliente => {
+      (cliente.atendimentos || []).forEach((atendimento: any) => {
+        dados.push({
+          'Cliente': cliente.cliente.nome,
+          'CPF': cliente.cliente.cpf,
+          'Email': cliente.cliente.email,
+          'Telefone': cliente.cliente.telefone,
+          'Data/Hora': atendimento.dataHora,
+          'Serviço': atendimento.nomeServico,
+          'Valor': `R$ ${atendimento.valorServico}`,
+          'Profissional': atendimento.nomeProfissional,
+          'Telefone Profissional': atendimento.telefoneProfissional,
+          'Observações': atendimento.observacoes || ''
+        });
+      });
+    });
+
+    if (dados.length === 0) {
+      this.mensagem = 'Nenhum dado para exportar.';
+      return;
+    }
+
+    // Acessar XLSX via window
+    const XLSX = (window as any).XLSX;
+    
+    // Criar workbook e worksheet
+    const ws = XLSX.utils.json_to_sheet(dados);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Clientes e Atendimentos');
+
+    // Ajustar largura das colunas
+    const colWidths = [
+      { wch: 20 },  // Cliente
+      { wch: 15 },  // CPF
+      { wch: 25 },  // Email
+      { wch: 15 },  // Telefone
+      { wch: 18 },  // Data/Hora
+      { wch: 20 },  // Serviço
+      { wch: 12 },  // Valor
+      { wch: 20 },  // Profissional
+      { wch: 18 },  // Telefone Profissional
+      { wch: 30 }   // Observações
+    ];
+    ws['!cols'] = colWidths;
+
+    // Download do arquivo
+    const nomeArquivo = `clientes-atendimentos-${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, nomeArquivo);
+  }
+
+  isAdmin(): boolean {
+    return this.perfil === 'ADMIN';
+  }
+
+  finalizarAtendimento(atendimento: any): void {
+    if (!this.isAdmin()) {
+      return;
+    }
+
+    if (atendimento.status?.toUpperCase() === 'FINALIZADO') {
+      return;
+    }
+
+    if (!confirm('Tem certeza que deseja finalizar este atendimento?')) {
+      return;
+    }
+
+    const token = localStorage.getItem('ACCESS_TOKEN');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+    this.http.put(
+      `${environment.atendimentosApi}api/atendimentos/${atendimento.idAtendimento}/finalizar`,
+      {},
+      { headers, responseType: 'text' }
+    ).subscribe({
+      next: () => {
+        atendimento.status = 'FINALIZADO';
+      },
+      error: (err) => {
+        this.mensagem = err?.error || 'Erro ao finalizar atendimento.';
+      }
+    });
   }
 }

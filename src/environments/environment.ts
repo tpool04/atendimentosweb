@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  atendimentosApi: 'http://localhost:8080/',
+  atendimentosApi: '/',
   viaCep: 'https://viacep.com.br/'
 };

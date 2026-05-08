@@ -1,0 +1,46 @@
+.card {
+  border: 0;
+  border-radius: 14px;
+}
+
+.card-resumo {
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+.resumo-label {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.resumo-valor {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.card-profissional {
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-profissional:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.75rem 1.5rem rgba(15, 23, 42, 0.12) !important;
+}
+
+.ranking-badge {
+  background-color: #0ea5e9;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.nome-profissional {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.total-profissional {
+  color: #0369a1;
+  font-size: 1.8rem;
+  line-height: 1;
+  font-weight: 800;
+}

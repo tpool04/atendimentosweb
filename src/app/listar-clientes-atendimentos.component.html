@@ -1,5 +1,10 @@
 <div class="clientes-container">
-  <h2 class="mb-4 text-primary fw-bold"><i class="bi bi-people-fill me-2"></i>Clientes e seus Atendimentos</h2>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary fw-bold mb-0"><i class="bi bi-people-fill me-2"></i>Clientes e seus Atendimentos</h2>
+    <button class="btn btn-success" (click)="exportarParaExcel()" title="Exportar dados para Excel">
+      <i class="bi bi-file-earmark-excel me-2"></i>Exportar Excel
+    </button>
+  </div>
   <div class="row mb-3">
     <div class="col-md-4">
       <label for="filtroData" class="form-label">Filtrar por Data:</label>
@@ -40,6 +45,7 @@
             <th>Profissional</th>
             <th>Telefone Profissional</th>
             <th>Observações</th>
+            <th *ngIf="isAdmin()">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -50,6 +56,11 @@
             <td><i class="bi bi-person-badge me-1 text-primary"></i>{{ atendimento.nomeProfissional }}</td>
             <td>{{ atendimento.telefoneProfissional | phoneFormat }}</td>
             <td>{{ atendimento.observacoes }}</td>
+            <td *ngIf="isAdmin()">
+              <button class="btn btn-sm" [ngClass]="atendimento.status?.toUpperCase() === 'FINALIZADO' ? 'btn-secondary' : 'btn-success'" (click)="finalizarAtendimento(atendimento)" [disabled]="atendimento.status?.toUpperCase() === 'FINALIZADO'">
+                {{ atendimento.status?.toUpperCase() === 'FINALIZADO' ? 'Finalizado' : 'Finalizar' }}
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>

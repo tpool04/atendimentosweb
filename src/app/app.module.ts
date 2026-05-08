@@ -27,6 +27,7 @@ import { ClienteEditarComponent } from './cliente-editar/cliente-editar.componen
 import { Ativar2FAComponent } from './ativar-2fa/ativar-2fa.component';
 import { HomeExplicativaComponent } from './home-explicativa.component';
 import { ListarClientesAtendimentosComponent } from './listar-clientes-atendimentos.component';
+import { DashboardAtendimentosComponent } from './dashboard-atendimentos.component';
 import { PhoneFormatPipe } from './phone-format.pipe';
 
 const routes: Routes = [
@@ -42,6 +43,7 @@ const routes: Routes = [
   { path: 'editar-atendimento/:id', component: AtendimentoReagendarComponent },
   { path: 'listar-clientes-atendimentos', component: ListarClientesAtendimentosComponent },
   { path: 'clientes-atendimentos', component: ListarClientesAtendimentosComponent },
+  { path: 'dashboard-atendimentos', component: DashboardAtendimentosComponent },
 ]
  
 @NgModule({
@@ -61,6 +63,7 @@ const routes: Routes = [
     ListarServicosComponent,
     HomeExplicativaComponent,
     ListarClientesAtendimentosComponent,
+    DashboardAtendimentosComponent,
     PhoneFormatPipe
   ],
   imports: [

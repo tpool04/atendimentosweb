@@ -22,14 +22,23 @@ export class AtendimentoConsultaComponent implements OnInit {
   }
   atendimentos: any[] = [];
   mensagem: string = '';
+  perfil: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
+    this.perfil = localStorage.getItem('PERFIL');
+    this.carregarAtendimentos();
+  }
+
+  carregarAtendimentos(): void {
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     this.http.get<any[]>(`${environment.atendimentosApi}api/atendimentos/cliente`, { headers }).subscribe({
       next: (res) => {
+        if (Array.isArray(res) && res.length > 0) {
+          console.log('[DEBUG] Exemplo de atendimento:', JSON.stringify(res[0]));
+        }
         if (Array.isArray(res)) {
           // Ordenar por data do serviço (assumindo campo dataHora ou similar)
           function parseDataHora(str: string): Date {
@@ -58,6 +67,10 @@ export class AtendimentoConsultaComponent implements OnInit {
     });
   }
 
+  isAdmin(): boolean {
+    return this.perfil === 'ADMIN';
+  }
+
   alterarAtendimento(a: any): void {
     this.router.navigate(['/editar-atendimento', a.idAtendimento]);
   }
@@ -66,13 +79,44 @@ export class AtendimentoConsultaComponent implements OnInit {
     if (!confirm('Tem certeza que deseja excluir este atendimento?')) return;
     const token = localStorage.getItem('ACCESS_TOKEN');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  this.http.delete(`${environment.atendimentosApi}api/atendimentos/${a.idAtendimento}`, { headers, responseType: 'text' }).subscribe({
+    this.http.delete(`${environment.atendimentosApi}api/atendimentos/${a.idAtendimento}`, { headers, responseType: 'text' }).subscribe({
       next: () => {
         this.atendimentos = this.atendimentos.filter(at => at.idAtendimento !== a.idAtendimento);
       },
       error: (err) => {
         alert('Erro ao excluir atendimento.');
         console.error('Erro ao excluir atendimento:', err);
+      }
+    });
+  }
+
+  finalizarAtendimento(a: any): void {
+    if (!this.isAdmin()) {
+      return;
+    }
+
+    if (a.status?.toUpperCase() === 'FINALIZADO') {
+      alert('Este atendimento ja esta finalizado.');
+      return;
+    }
+
+    if (!confirm('Tem certeza que deseja finalizar este atendimento?')) return;
+
+    const token = localStorage.getItem('ACCESS_TOKEN');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+    this.http.put(
+      `${environment.atendimentosApi}api/atendimentos/${a.idAtendimento}/finalizar`,
+      {},
+      { headers, responseType: 'text' }
+    ).subscribe({
+      next: () => {
+        a.status = 'FINALIZADO';
+        alert('Atendimento finalizado com sucesso.');
+      },
+      error: (err) => {
+        alert('Erro ao finalizar atendimento.');
+        console.error('Erro ao finalizar atendimento:', err);
       }
     });
   }
