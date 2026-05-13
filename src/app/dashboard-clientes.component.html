@@ -1,0 +1,132 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-1">Dashboard de Clientes</h4>
+      <p class="text-muted mb-0">Visao de consumo por cliente e servico.</p>
+    </div>
+    <button class="btn btn-outline-primary" (click)="carregarDashboard()">
+      <i class="bi bi-arrow-clockwise me-1"></i>Atualizar
+    </button>
+  </div>
+
+  <div *ngIf="mensagem" class="alert alert-info">{{ mensagem }}</div>
+  <div *ngIf="carregando" class="alert alert-secondary">Carregando dashboard...</div>
+
+  <div *ngIf="!carregando && analytics.length > 0" class="row g-3 mb-4">
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-resumo shadow-sm h-100">
+        <div class="card-body">
+          <p class="resumo-label mb-2">Total executado</p>
+          <h2 class="resumo-valor mb-0">{{ totalGeralExecutado }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-resumo shadow-sm h-100">
+        <div class="card-body">
+          <p class="resumo-label mb-2">Servicos no ranking</p>
+          <h2 class="resumo-valor mb-0">{{ totalServicos }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-resumo shadow-sm h-100">
+        <div class="card-body">
+          <p class="resumo-label mb-2">Clientes no ranking</p>
+          <h2 class="resumo-valor mb-0">{{ totalClientes }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!carregando && rankingServicos.length > 0" class="row g-3 mb-4">
+    <div class="col-12 col-xl-6">
+      <div class="card shadow-sm painel-janela h-100">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Grafico de barras por servico</h6>
+        </div>
+        <div class="card-body">
+          <canvas #graficoServicos style="max-height: 340px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-6">
+      <div class="card shadow-sm painel-janela h-100">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Grafico de pizza por servico</h6>
+        </div>
+        <div class="card-body d-flex justify-content-center">
+          <canvas #graficoPizzaServicos style="max-height: 340px; max-width: 340px;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!carregando && rankingDatas.length > 0" class="card shadow-sm painel-janela mb-4">
+    <div class="card-header bg-white">
+      <h6 class="mb-0">Evolucao de atendimentos por data</h6>
+    </div>
+    <div class="card-body">
+      <canvas #graficoLinhaDatas style="max-height: 320px;"></canvas>
+    </div>
+  </div>
+
+  <div *ngIf="!carregando && (rankingServicos.length > 0 || rankingClientes.length > 0)" class="row g-3">
+    <div class="col-12 col-xl-6" *ngIf="rankingServicos.length > 0">
+      <div class="card shadow-sm painel-janela h-100">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Ranking por servico</h6>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Posicao</th>
+                <th>Servico</th>
+                <th class="text-end">Total executado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of rankingServicos; let idx = index">
+                <td><span class="badge rounded-pill ranking-badge">#{{ idx + 1 }}</span></td>
+                <td>{{ item.servicoTipo }}</td>
+                <td class="text-end fw-bold">{{ item.totalExecutado }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-6" *ngIf="rankingClientes.length > 0">
+      <div class="card shadow-sm painel-janela h-100">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Ranking por cliente</h6>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Posicao</th>
+                <th>ID Cliente</th>
+                <th>Nome</th>
+                <th class="text-end">Total executado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of rankingClientes; let idx = index">
+                <td><span class="badge rounded-pill ranking-badge">#{{ idx + 1 }}</span></td>
+                <td>{{ item.clienteId }}</td>
+                <td>{{ item.clienteNome }}</td>
+                <td class="text-end fw-bold">{{ item.totalExecutado }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+.card {
+  border: 0;
+  border-radius: 14px;
+}
+
+.painel-janela {
+  border: 1px solid #dbeafe;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08) !important;
+}
+
+.card-resumo {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+}
+
+.resumo-label {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.resumo-valor {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.ranking-badge {
+  background-color: #1d4ed8;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.table thead th {
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 576px) {
+  .resumo-valor {
+    font-size: 1.7rem;
+  }
+}

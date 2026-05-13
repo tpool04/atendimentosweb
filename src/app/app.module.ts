@@ -28,6 +28,7 @@ import { Ativar2FAComponent } from './ativar-2fa/ativar-2fa.component';
 import { HomeExplicativaComponent } from './home-explicativa.component';
 import { ListarClientesAtendimentosComponent } from './listar-clientes-atendimentos.component';
 import { DashboardAtendimentosComponent } from './dashboard-atendimentos.component';
+import { DashboardClientesComponent } from './dashboard-clientes.component';
 import { PhoneFormatPipe } from './phone-format.pipe';
 
 const routes: Routes = [
@@ -44,6 +45,7 @@ const routes: Routes = [
   { path: 'listar-clientes-atendimentos', component: ListarClientesAtendimentosComponent },
   { path: 'clientes-atendimentos', component: ListarClientesAtendimentosComponent },
   { path: 'dashboard-atendimentos', component: DashboardAtendimentosComponent },
+  { path: 'dashboard-clientes', component: DashboardClientesComponent },
 ]
  
 @NgModule({
@@ -64,6 +66,7 @@ const routes: Routes = [
     HomeExplicativaComponent,
     ListarClientesAtendimentosComponent,
     DashboardAtendimentosComponent,
+    DashboardClientesComponent,
     PhoneFormatPipe
   ],
   imports: [
